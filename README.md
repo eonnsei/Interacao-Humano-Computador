@@ -1,6 +1,6 @@
 # 🌱 UFCROWD — Vitrine Acadêmica e Financiamento Coletivo (UFABC)
 
-![Status](https://img.shields.io/badge/status-vers%C3%A3o%20inicial%20(v0.1.0)-2e7d63)
+![Status](https://img.shields.io/badge/status-vers%C3%A3o%20inicial%20(v1.0.1)-2e7d63)
 ![HTML5](https://img.shields.io/badge/HTML5-Sem%C3%A2ntico-E34F26?logo=html5&logoColor=white)
 ![CSS3](https://img.shields.io/badge/CSS3-Responsivo-1572B6?logo=css3&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-Vanilla%20ES6+-F7DF1E?logo=javascript&logoColor=black)
