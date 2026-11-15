@@ -38,6 +38,46 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* =========================================================
+   ESTILOS DE FOCO E NAVEGAÇÃO POR TECLADO (ACESSIBILIDADE)
+   ========================================================= */
+:focus-visible {
+  outline: 3px solid var(--green-primary);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.skip-link {
+  position: fixed;
+  top: -100px;
+  left: 16px;
+  background-color: var(--green-primary);
+  color: #ffffff;
+  padding: 10px 18px;
+  border-radius: 6px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  text-decoration: none;
+  z-index: 2000;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+  transition: top 0.2s ease;
+}
+
+.skip-link:focus {
+  top: 14px;
+}
+
+/* Destaque de foco para checkboxes personalizados */
+.filter-check-left input[type='checkbox']:focus-visible + .custom-checkbox {
+  outline: 3px solid var(--green-primary);
+  outline-offset: 2px;
+}
+
+.period-select-wrap:focus-within {
+  border-color: var(--green-primary);
+  box-shadow: 0 0 0 2px rgba(46, 125, 99, 0.25);
+}
+
 /* MODO ALTO CONTRASTE */
 body.high-contrast {
   --bg-page: #000000;
@@ -49,6 +89,11 @@ body.high-contrast {
   --green-accent: #00ffaa;
   --green-soft: #111111;
   --green-pill-bg: #1c2b26;
+}
+
+body.high-contrast :focus-visible {
+  outline: 3px solid #ffd600;
+  outline-offset: 3px;
 }
 
 body.high-contrast .site-header,
@@ -129,6 +174,7 @@ body.high-contrast .campaign-tab.active {
   font-weight: 500;
   color: var(--text-primary);
   cursor: pointer;
+  padding: 4px 6px;
   transition: color 0.2s;
 }
 
@@ -159,7 +205,7 @@ body.high-contrast .campaign-tab.active {
   background: none;
   border: none;
   border-bottom: 2px solid transparent;
-  padding: 12px 2px;
+  padding: 12px 4px;
   font-family: inherit;
   font-size: 0.85rem;
   font-weight: 500;
@@ -189,6 +235,7 @@ body.high-contrast .campaign-tab.active {
   color: var(--text-secondary);
   display: inline-flex;
   align-items: center;
+  padding: 4px;
   transition: color 0.2s;
 }
 
@@ -241,7 +288,8 @@ body.high-contrast .campaign-tab.active {
   transition: transform 0.35s ease;
 }
 
-.news-banner:hover .news-banner-img {
+.news-banner:hover .news-banner-img,
+.news-banner:focus-visible .news-banner-img {
   transform: scale(1.015);
 }
 
@@ -291,10 +339,12 @@ body.high-contrast .campaign-tab.active {
 
 .featured-card {
   cursor: pointer;
+  border-radius: 8px;
   transition: opacity 0.2s;
 }
 
-.featured-card:hover .featured-title {
+.featured-card:hover .featured-title,
+.featured-card:focus-visible .featured-title {
   color: var(--green-primary);
   text-decoration: underline;
 }
@@ -379,9 +429,11 @@ body.high-contrast .campaign-tab.active {
 
 .rec-card {
   cursor: pointer;
+  border-radius: 8px;
 }
 
-.rec-card:hover .rec-title {
+.rec-card:hover .rec-title,
+.rec-card:focus-visible .rec-title {
   color: var(--green-primary);
   text-decoration: underline;
 }
@@ -466,7 +518,6 @@ body.high-contrast .campaign-tab.active {
   align-items: start;
 }
 
-/* Card de Filtros à esquerda */
 .filters-sidebar-card {
   background-color: var(--bg-page);
   border: 1px solid #eceeed;
@@ -525,8 +576,8 @@ body.high-contrast .campaign-tab.active {
 .filter-check-left input[type='checkbox'] {
   position: absolute;
   opacity: 0;
-  width: 0;
-  height: 0;
+  width: 1px;
+  height: 1px;
 }
 
 .custom-checkbox {
@@ -566,7 +617,6 @@ body.high-contrast .campaign-tab.active {
   border-radius: 999px;
 }
 
-/* Seletor de Período */
 .period-select-wrap {
   position: relative;
   display: flex;
@@ -603,7 +653,6 @@ body.high-contrast .campaign-tab.active {
   pointer-events: none;
 }
 
-/* Botão Limpar filtros */
 .clear-filters-btn {
   width: 100%;
   display: inline-flex;
@@ -628,7 +677,6 @@ body.high-contrast .campaign-tab.active {
   color: #ffffff;
 }
 
-/* Coluna direita da categoria */
 .category-header-bar {
   display: flex;
   align-items: baseline;
@@ -657,14 +705,17 @@ body.high-contrast .campaign-tab.active {
 
 .entity-showcase-card {
   cursor: pointer;
+  border-radius: 12px;
   transition: transform 0.2s ease;
 }
 
-.entity-showcase-card:hover {
+.entity-showcase-card:hover,
+.entity-showcase-card:focus-visible {
   transform: translateY(-2px);
 }
 
-.entity-showcase-card:hover .entity-card-caption {
+.entity-showcase-card:hover .entity-card-caption,
+.entity-showcase-card:focus-visible .entity-card-caption {
   color: var(--green-primary);
 }
 
@@ -733,6 +784,7 @@ body.high-contrast .campaign-tab.active {
   font-size: 0.8rem;
   font-weight: 500;
   cursor: pointer;
+  padding: 4px 6px;
   transition: color 0.2s;
 }
 
@@ -1005,7 +1057,7 @@ body.high-contrast .campaign-tab.active {
   background: none;
   border: none;
   border-bottom: 2px solid transparent;
-  padding: 16px 2px;
+  padding: 16px 4px;
   font-family: inherit;
   font-size: 0.82rem;
   font-weight: 500;
@@ -1168,9 +1220,11 @@ body.high-contrast .campaign-tab.active {
 
 .similar-card {
   cursor: pointer;
+  border-radius: 8px;
 }
 
-.similar-card:hover .similar-card-title {
+.similar-card:hover .similar-card-title,
+.similar-card:focus-visible .similar-card-title {
   color: var(--green-primary);
   text-decoration: underline;
 }

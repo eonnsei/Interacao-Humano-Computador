@@ -10,6 +10,11 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <!-- LINK DE ACESSIBILIDADE PARA PULAR NAVEGAÇÃO -->
+  <a href="#mainSkipTarget" class="skip-link" id="skipToContentLink">
+    Pular para o conteúdo principal
+  </a>
+
   <!-- CABEÇALHO -->
   <header class="site-header">
     <div class="container header-top">
@@ -35,7 +40,7 @@
       <div class="container header-nav-bar">
         <div class="nav-spacer" aria-hidden="true"></div>
 
-        <nav class="category-nav" aria-label="Categorias de projetos">
+        <nav class="category-nav" id="primaryCategoryNav" aria-label="Categorias de projetos">
           <button type="button" class="cat-link" data-category="entidades">Entidades</button>
           <button type="button" class="cat-link" data-category="pesquisas">Pesquisas</button>
           <button type="button" class="cat-link" data-category="atleticas">Atléticas</button>
@@ -71,9 +76,9 @@
   <!-- VISÃO 1: PÁGINA INICIAL (VITRINE) -->
   <main id="homeView" class="container main-content">
     <section class="news-section" aria-labelledby="newsHeading">
-      <h1 id="newsHeading" class="section-main-title">Principais notícias UFABC</h1>
+      <h1 id="newsHeading" class="section-main-title" tabindex="-1">Principais notícias UFABC</h1>
 
-      <article class="news-banner" id="newsBanner" tabindex="0" role="button" aria-label="Abrir detalhes do Edital Fapesp">
+      <article class="news-banner" id="newsBanner" tabindex="0" role="button" aria-label="Abrir detalhes do Edital Fapesp para bolsas de mestrado 1º semestre 2027">
         <img
           src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1400&q=80"
           alt="Fachada institucional referente ao Edital FAPESP para bolsas de mestrado"
@@ -98,9 +103,9 @@
 
         <nav class="pagination" aria-label="Paginação de projetos recomendados">
           <button type="button" class="page-btn" id="prevPageBtn" aria-label="Página anterior">&lsaquo;</button>
-          <button type="button" class="page-btn active" data-page="1">1</button>
-          <button type="button" class="page-btn" data-page="2">2</button>
-          <button type="button" class="page-btn" data-page="3">3</button>
+          <button type="button" class="page-btn active" data-page="1" aria-label="Página 1" aria-current="page">1</button>
+          <button type="button" class="page-btn" data-page="2" aria-label="Página 2">2</button>
+          <button type="button" class="page-btn" data-page="3" aria-label="Página 3">3</button>
           <button type="button" class="page-btn" id="nextPageBtn" aria-label="Próxima página">&rsaquo;</button>
         </nav>
       </div>
@@ -119,14 +124,13 @@
           <h2>Filtros</h2>
         </div>
 
-        <!-- Grupo 1: Tipo de conteúdo -->
         <div class="filter-group">
           <h3 class="filter-group-title">Tipo de conteúdo</h3>
 
           <label class="filter-check-row">
             <span class="filter-check-left">
               <input type="checkbox" class="filter-type-checkbox" value="processos" checked />
-              <span class="custom-checkbox"></span>
+              <span class="custom-checkbox" aria-hidden="true"></span>
               <span>Processos seletivos</span>
             </span>
             <span class="filter-count-pill">458</span>
@@ -135,7 +139,7 @@
           <label class="filter-check-row">
             <span class="filter-check-left">
               <input type="checkbox" class="filter-type-checkbox" value="premiacoes" checked />
-              <span class="custom-checkbox"></span>
+              <span class="custom-checkbox" aria-hidden="true"></span>
               <span>Premiações</span>
             </span>
             <span class="filter-count-pill">231</span>
@@ -144,7 +148,7 @@
           <label class="filter-check-row">
             <span class="filter-check-left">
               <input type="checkbox" class="filter-type-checkbox" value="rifas" />
-              <span class="custom-checkbox"></span>
+              <span class="custom-checkbox" aria-hidden="true"></span>
               <span>Rifas</span>
             </span>
             <span class="filter-count-pill">125</span>
@@ -153,7 +157,7 @@
           <label class="filter-check-row">
             <span class="filter-check-left">
               <input type="checkbox" class="filter-type-checkbox" value="eventos" checked />
-              <span class="custom-checkbox"></span>
+              <span class="custom-checkbox" aria-hidden="true"></span>
               <span>Eventos</span>
             </span>
             <span class="filter-count-pill">672</span>
@@ -162,7 +166,7 @@
           <label class="filter-check-row">
             <span class="filter-check-left">
               <input type="checkbox" class="filter-type-checkbox" value="competicoes" />
-              <span class="custom-checkbox"></span>
+              <span class="custom-checkbox" aria-hidden="true"></span>
               <span>Competições</span>
             </span>
             <span class="filter-count-pill">97</span>
@@ -171,21 +175,20 @@
           <label class="filter-check-row">
             <span class="filter-check-left">
               <input type="checkbox" class="filter-type-checkbox" value="outros" />
-              <span class="custom-checkbox"></span>
+              <span class="custom-checkbox" aria-hidden="true"></span>
               <span>Outros</span>
             </span>
             <span class="filter-count-pill">320</span>
           </label>
         </div>
 
-        <!-- Grupo 2: Objetivo -->
         <div class="filter-group">
           <h3 class="filter-group-title">Objetivo</h3>
 
           <label class="filter-check-row">
             <span class="filter-check-left">
               <input type="checkbox" class="filter-goal-checkbox" value="academico" />
-              <span class="custom-checkbox"></span>
+              <span class="custom-checkbox" aria-hidden="true"></span>
               <span>Acadêmico</span>
             </span>
           </label>
@@ -193,7 +196,7 @@
           <label class="filter-check-row">
             <span class="filter-check-left">
               <input type="checkbox" class="filter-goal-checkbox" value="social" />
-              <span class="custom-checkbox"></span>
+              <span class="custom-checkbox" aria-hidden="true"></span>
               <span>Social</span>
             </span>
           </label>
@@ -201,7 +204,7 @@
           <label class="filter-check-row">
             <span class="filter-check-left">
               <input type="checkbox" class="filter-goal-checkbox" value="cultural" />
-              <span class="custom-checkbox"></span>
+              <span class="custom-checkbox" aria-hidden="true"></span>
               <span>Cultural</span>
             </span>
           </label>
@@ -209,7 +212,7 @@
           <label class="filter-check-row">
             <span class="filter-check-left">
               <input type="checkbox" class="filter-goal-checkbox" value="esportivo" />
-              <span class="custom-checkbox"></span>
+              <span class="custom-checkbox" aria-hidden="true"></span>
               <span>Esportivo</span>
             </span>
           </label>
@@ -217,13 +220,12 @@
           <label class="filter-check-row">
             <span class="filter-check-left">
               <input type="checkbox" class="filter-goal-checkbox" value="outro" />
-              <span class="custom-checkbox"></span>
+              <span class="custom-checkbox" aria-hidden="true"></span>
               <span>Outro</span>
             </span>
           </label>
         </div>
 
-        <!-- Grupo 3: Período -->
         <div class="filter-group">
           <h3 class="filter-group-title">Período</h3>
           <div class="period-select-wrap">
@@ -257,17 +259,17 @@
       <!-- Coluna direita: Título da categoria + Grade 2x3 + Paginação -->
       <div class="category-results-col">
         <div class="category-header-bar">
-          <h1 id="categoryPageTitle" class="category-main-heading">Entidades</h1>
-          <span id="categoryResultsCount" class="category-results-meta"></span>
+          <h1 id="categoryPageTitle" class="category-main-heading" tabindex="-1">Entidades</h1>
+          <span id="categoryResultsCount" class="category-results-meta" aria-live="polite"></span>
         </div>
 
         <div class="category-cards-grid" id="categoryCardsGrid"></div>
 
         <nav class="pagination category-pagination" aria-label="Paginação da categoria">
           <button type="button" class="page-btn" id="catPrevPageBtn" aria-label="Página anterior">&lsaquo;</button>
-          <button type="button" class="page-btn cat-page-btn active" data-cat-page="1">1</button>
-          <button type="button" class="page-btn cat-page-btn" data-cat-page="2">2</button>
-          <button type="button" class="page-btn cat-page-btn" data-cat-page="3">3</button>
+          <button type="button" class="page-btn cat-page-btn active" data-cat-page="1" aria-label="Página 1" aria-current="page">1</button>
+          <button type="button" class="page-btn cat-page-btn" data-cat-page="2" aria-label="Página 2">2</button>
+          <button type="button" class="page-btn cat-page-btn" data-cat-page="3" aria-label="Página 3">3</button>
           <button type="button" class="page-btn" id="catNextPageBtn" aria-label="Próxima página">&rsaquo;</button>
         </nav>
       </div>
@@ -284,7 +286,7 @@
       </div>
 
       <div class="detail-title-block">
-        <h1 id="detailTitle" class="detail-main-title"></h1>
+        <h1 id="detailTitle" class="detail-main-title" tabindex="-1"></h1>
         <p id="detailSubtitle" class="detail-subtitle"></p>
       </div>
 
@@ -309,7 +311,7 @@
             <div class="funding-amount" id="detailRaisedAmount">R$ 5.250</div>
             <div class="funding-goal-text" id="detailGoalText">de uma meta de R$ 10.000</div>
 
-            <div class="funding-progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" id="detailProgressBar">
+            <div class="funding-progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-label="Progresso da meta financeira" id="detailProgressBar">
               <div class="funding-progress-fill" id="detailProgressFill"></div>
             </div>
 
@@ -388,21 +390,21 @@
 
     <div class="campaign-tabs-bar">
       <div class="container campaign-tabs-inner">
-        <nav class="campaign-tabs-list" aria-label="Seções do projeto">
-          <button type="button" class="campaign-tab active" data-tab="campanha">Campanha</button>
-          <button type="button" class="campaign-tab" data-tab="recompensas">Recompensas</button>
-          <button type="button" class="campaign-tab" data-tab="criador">Criador</button>
-          <button type="button" class="campaign-tab" data-tab="faq">
+        <div class="campaign-tabs-list" id="campaignTabsList" role="tablist" aria-label="Seções do projeto">
+          <button type="button" role="tab" aria-selected="true" class="campaign-tab active" data-tab="campanha">Campanha</button>
+          <button type="button" role="tab" aria-selected="false" class="campaign-tab" data-tab="recompensas">Recompensas</button>
+          <button type="button" role="tab" aria-selected="false" class="campaign-tab" data-tab="criador">Criador</button>
+          <button type="button" role="tab" aria-selected="false" class="campaign-tab" data-tab="faq">
             Perguntas frequentes <sup id="faqCountBadge">2</sup>
           </button>
-          <button type="button" class="campaign-tab" data-tab="atualizacoes">
+          <button type="button" role="tab" aria-selected="false" class="campaign-tab" data-tab="atualizacoes">
             Atualizações <sup id="updatesCountBadge">3</sup>
           </button>
-          <button type="button" class="campaign-tab" data-tab="comentarios">
+          <button type="button" role="tab" aria-selected="false" class="campaign-tab" data-tab="comentarios">
             Comentários <sup id="commentsCountBadge">48</sup>
           </button>
-          <button type="button" class="campaign-tab" data-tab="comunidade">Comunidade</button>
-        </nav>
+          <button type="button" role="tab" aria-selected="false" class="campaign-tab" data-tab="comunidade">Comunidade</button>
+        </div>
 
         <div class="campaign-bar-actions">
           <button type="button" class="bar-primary-btn" id="barSupportBtn">Voltar para este projeto</button>
@@ -417,7 +419,7 @@
     </div>
 
     <div class="container campaign-body-container">
-      <div id="campaignTabContent" class="campaign-tab-panel"></div>
+      <div id="campaignTabContent" class="campaign-tab-panel" role="tabpanel"></div>
 
       <section class="similar-projects-section" aria-labelledby="similarHeading">
         <h2 id="similarHeading" class="similar-heading">Veja projetos similares</h2>
@@ -584,7 +586,7 @@
   <!-- MODAL DE APOIO FINANCEIRO / COLABORAÇÃO -->
   <div class="modal-backdrop" id="supportModal" hidden>
     <div class="modal-card modal-card-md" role="dialog" aria-modal="true" aria-labelledby="supportModalTitle">
-      <button type="button" class="modal-close" id="closeSupportModal" aria-label="Fechar janela">&times;</button>
+      <button type="button" class="modal-close" id="closeSupportModal" aria-label="Fechar janela de apoio">&times;</button>
       <div class="modal-body">
         <span class="badge-goal" id="supportModalBadge">Apoio Financeiro Acadêmico</span>
         <h3 id="supportModalTitle">Apoiar este projeto</h3>
@@ -619,7 +621,7 @@
   <!-- MODAL DE LOGIN INSTITUCIONAL -->
   <div class="modal-backdrop" id="loginModal" hidden>
     <div class="modal-card modal-card-sm" role="dialog" aria-modal="true" aria-labelledby="loginModalTitle">
-      <button type="button" class="modal-close" id="closeLoginModal" aria-label="Fechar login">&times;</button>
+      <button type="button" class="modal-close" id="closeLoginModal" aria-label="Fechar janela de login">&times;</button>
       <div class="modal-body">
         <h3 id="loginModalTitle">Acesso Institucional UFABC</h3>
         <p class="modal-sub">Entre com seu e-mail institucional para cadastrar ou apoiar projetos.</p>

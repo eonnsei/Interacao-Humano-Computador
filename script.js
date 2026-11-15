@@ -85,7 +85,6 @@ const ENTITY_BANNERS = {
    CATÁLOGO UNIFICADO DE ENTIDADES E PROJETOS
    ========================================================= */
 const PROJECTS_CATALOG = [
-  // PROJETO EM DESTAQUE NA HOME
   {
     id: 'microplasticos',
     featured: true,
@@ -122,8 +121,6 @@ const PROJECTS_CATALOG = [
     updatesCount: 3,
     commentsCount: 48
   },
-
-  // ENTIDADES (PÁGINA 1 — CONFORME SCREENSHOT)
   {
     id: 'green-team',
     featured: false,
@@ -340,8 +337,6 @@ const PROJECTS_CATALOG = [
     updatesCount: 4,
     commentsCount: 28
   },
-
-  // ENTIDADES (PÁGINAS 2 E 3 PARA PAGINAÇÃO)
   {
     id: 'prisma-ufabc',
     featured: false,
@@ -408,8 +403,6 @@ const PROJECTS_CATALOG = [
     updatesCount: 3,
     commentsCount: 14
   },
-
-  // PESQUISAS (RECOMENDADOS NA HOME + CATEGORIA PESQUISAS)
   {
     id: 'biomarcadores',
     featured: false,
@@ -554,8 +547,6 @@ const PROJECTS_CATALOG = [
     updatesCount: 4,
     commentsCount: 29
   },
-
-  // ATLÉTICAS
   {
     id: 'atletica-geral',
     featured: false,
@@ -661,8 +652,6 @@ const PROJECTS_CATALOG = [
     updatesCount: 3,
     commentsCount: 25
   },
-
-  // PROJETOS DE EXTENSÃO
   {
     id: 'lixo-eletronico',
     featured: false,
@@ -751,6 +740,7 @@ let activeCategorySlug = 'entidades';
 let currentCategoryPage = 1;
 let activeProject = PROJECTS_CATALOG[0];
 let activeCampaignTab = 'campanha';
+let lastFocusedBeforeModal = null;
 
 const clockIconSvg = `
   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
@@ -768,9 +758,75 @@ function formatBRL(value) {
 }
 
 /* =========================================================
+   UTILITÁRIOS DE ACESSIBILIDADE E NAVEGAÇÃO POR TECLADO
+   ========================================================= */
+function bindCardKeyboardActivation(element, onActivate) {
+  element.setAttribute('tabindex', '0');
+  element.setAttribute('role', 'button');
+  element.addEventListener('click', onActivate);
+  element.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      onActivate();
+    }
+  });
+}
+
+function enableHorizontalArrowNavigation(containerSelector, itemSelector) {
+  const container = document.querySelector(containerSelector);
+  if (!container) return;
+
+  container.addEventListener('keydown', (e) => {
+    const items = Array.from(container.querySelectorAll(itemSelector));
+    const currentIndex = items.indexOf(document.activeElement);
+    if (currentIndex === -1) return;
+
+    let nextIndex = null;
+    if (e.key === 'ArrowRight') {
+      nextIndex = (currentIndex + 1) % items.length;
+    } else if (e.key === 'ArrowLeft') {
+      nextIndex = (currentIndex - 1 + items.length) % items.length;
+    } else if (e.key === 'Home') {
+      nextIndex = 0;
+    } else if (e.key === 'End') {
+      nextIndex = items.length - 1;
+    }
+
+    if (nextIndex !== null) {
+      e.preventDefault();
+      items[nextIndex].focus();
+    }
+  });
+}
+
+function getFocusableElements(container) {
+  return Array.from(
+    container.querySelectorAll(
+      'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+    )
+  ).filter((el) => el.offsetParent !== null);
+}
+
+function openAccessibleModal(modalEl) {
+  lastFocusedBeforeModal = document.activeElement;
+  modalEl.hidden = false;
+  const focusables = getFocusableElements(modalEl);
+  if (focusables.length > 0) {
+    focusables[0].focus();
+  }
+}
+
+function closeAccessibleModal(modalEl) {
+  modalEl.hidden = true;
+  if (lastFocusedBeforeModal && typeof lastFocusedBeforeModal.focus === 'function') {
+    lastFocusedBeforeModal.focus();
+  }
+}
+
+/* =========================================================
    CONTROLE DE TELAS (HOME / CATEGORIA / DETALHES)
    ========================================================= */
-function switchView(targetView) {
+function switchView(targetView, focusHeading = true) {
   currentView = targetView;
   document.getElementById('homeView').hidden = targetView !== 'home';
   document.getElementById('categoryView').hidden = targetView !== 'category';
@@ -779,13 +835,24 @@ function switchView(targetView) {
   document.querySelectorAll('.cat-link').forEach((btn) => {
     const isCurrentCat = targetView === 'category' && btn.getAttribute('data-category') === activeCategorySlug;
     btn.classList.toggle('active', isCurrentCat);
+    btn.setAttribute('aria-current', isCurrentCat ? 'page' : 'false');
   });
 
   window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  if (focusHeading) {
+    if (targetView === 'home') {
+      document.getElementById('newsHeading').focus({ preventScroll: true });
+    } else if (targetView === 'category') {
+      document.getElementById('categoryPageTitle').focus({ preventScroll: true });
+    } else if (targetView === 'detail') {
+      document.getElementById('detailTitle').focus({ preventScroll: true });
+    }
+  }
 }
 
-function showHomeView() {
-  switchView('home');
+function showHomeView(focusHeading = true) {
+  switchView('home', focusHeading);
 }
 
 function openCategoryView(categorySlug) {
@@ -794,7 +861,7 @@ function openCategoryView(categorySlug) {
   document.getElementById('categoryPageTitle').textContent = CATEGORY_TITLES[categorySlug] || 'Entidades';
   updateCategoryPaginationUI();
   renderCategoryGrid();
-  switchView('category');
+  switchView('category', true);
 }
 
 /* =========================================================
@@ -804,12 +871,13 @@ function renderFeaturedProject() {
   const container = document.getElementById('featuredProjectCard');
   const project = PROJECTS_CATALOG.find((p) => p.featured) || PROJECTS_CATALOG[0];
 
+  container.setAttribute('aria-label', `Abrir projeto em destaque: ${project.title}`);
   container.innerHTML = `
     <div class="featured-thumb-wrap">
       <img src="${project.image}" alt="${project.title}" class="featured-thumb" />
     </div>
     <div class="card-title-row">
-      <span class="entity-avatar" style="background-color: ${project.badgeColor};">${project.badgeText}</span>
+      <span class="entity-avatar" style="background-color: ${project.badgeColor};" aria-hidden="true">${project.badgeText}</span>
       <h3 class="featured-title">${project.title}</h3>
     </div>
     <div class="project-meta">
@@ -820,7 +888,7 @@ function renderFeaturedProject() {
     <span class="goal-pill">${project.goalType}</span>
   `;
 
-  container.onclick = () => openProjectDetail(project.id);
+  bindCardKeyboardActivation(container, () => openProjectDetail(project.id));
 }
 
 function renderRecommendedProjects() {
@@ -839,12 +907,12 @@ function renderRecommendedProjects() {
   grid.innerHTML = items
     .map(
       (item) => `
-      <article class="rec-card" data-project-id="${item.id}">
+      <article class="rec-card" data-project-id="${item.id}" aria-label="Abrir projeto: ${item.title}">
         <div class="rec-thumb-wrap">
           <img src="${item.image}" alt="${item.title}" class="rec-thumb" />
         </div>
         <div class="card-title-row">
-          <span class="entity-avatar" style="background-color: ${item.badgeColor};">${item.badgeText}</span>
+          <span class="entity-avatar" style="background-color: ${item.badgeColor};" aria-hidden="true">${item.badgeText}</span>
           <h3 class="rec-title">${item.title}</h3>
         </div>
         <div class="rec-meta">
@@ -857,17 +925,17 @@ function renderRecommendedProjects() {
     .join('');
 
   grid.querySelectorAll('.rec-card').forEach((card) => {
-    card.addEventListener('click', () => {
-      const id = card.getAttribute('data-project-id');
-      openProjectDetail(id);
-    });
+    const id = card.getAttribute('data-project-id');
+    bindCardKeyboardActivation(card, () => openProjectDetail(id));
   });
 }
 
 function updateHomePaginationUI() {
   document.querySelectorAll('.page-btn[data-page]').forEach((btn) => {
     const pageNum = Number(btn.getAttribute('data-page'));
-    btn.classList.toggle('active', pageNum === currentHomePage);
+    const isActive = pageNum === currentHomePage;
+    btn.classList.toggle('active', isActive);
+    btn.setAttribute('aria-current', isActive ? 'page' : 'false');
   });
 }
 
@@ -888,22 +956,18 @@ function renderCategoryGrid() {
 
   let items = PROJECTS_CATALOG.filter((item) => item.category === activeCategorySlug);
 
-  // Aplica filtros de Tipo de conteúdo (quando algum está marcado)
   if (checkedTypes.length > 0) {
     items = items.filter((item) => checkedTypes.includes(item.contentType));
   }
 
-  // Aplica filtros de Objetivo (quando algum está marcado)
   if (checkedGoals.length > 0) {
     items = items.filter((item) => checkedGoals.includes(item.objective));
   }
 
-  // Aplica filtro de Período
   if (period !== 'all') {
     items = items.filter((item) => item.period === period);
   }
 
-  // Paginação (6 itens por página)
   const itemsPerPage = 6;
   const startIndex = (currentCategoryPage - 1) * itemsPerPage;
   const paginatedItems = items.slice(startIndex, startIndex + itemsPerPage);
@@ -923,7 +987,7 @@ function renderCategoryGrid() {
   grid.innerHTML = paginatedItems
     .map(
       (item) => `
-      <article class="entity-showcase-card" data-entity-id="${item.id}">
+      <article class="entity-showcase-card" data-entity-id="${item.id}" aria-label="Abrir detalhes de ${item.title}">
         <div class="entity-banner-box ${item.lightBorder ? 'light-border' : ''}">
           <img src="${item.image}" alt="${item.title}" />
         </div>
@@ -934,17 +998,17 @@ function renderCategoryGrid() {
     .join('');
 
   grid.querySelectorAll('.entity-showcase-card').forEach((card) => {
-    card.addEventListener('click', () => {
-      const id = card.getAttribute('data-entity-id');
-      openProjectDetail(id);
-    });
+    const id = card.getAttribute('data-entity-id');
+    bindCardKeyboardActivation(card, () => openProjectDetail(id));
   });
 }
 
 function updateCategoryPaginationUI() {
   document.querySelectorAll('.cat-page-btn').forEach((btn) => {
     const pageNum = Number(btn.getAttribute('data-cat-page'));
-    btn.classList.toggle('active', pageNum === currentCategoryPage);
+    const isActive = pageNum === currentCategoryPage;
+    btn.classList.toggle('active', isActive);
+    btn.setAttribute('aria-current', isActive ? 'page' : 'false');
   });
 }
 
@@ -982,12 +1046,14 @@ function openProjectDetail(projectId) {
   document.getElementById('commentsCountBadge').textContent = project.commentsCount;
 
   document.querySelectorAll('.campaign-tab').forEach((tab) => {
-    tab.classList.toggle('active', tab.getAttribute('data-tab') === 'campanha');
+    const isCampaign = tab.getAttribute('data-tab') === 'campanha';
+    tab.classList.toggle('active', isCampaign);
+    tab.setAttribute('aria-selected', String(isCampaign));
   });
 
   renderCampaignTabContent();
   renderSimilarProjects(project.id);
-  switchView('detail');
+  switchView('detail', true);
 }
 
 function updateFundingSidebarUI(project) {
@@ -1113,7 +1179,7 @@ function renderSimilarProjects(excludeId) {
   grid.innerHTML = similar
     .map(
       (item) => `
-      <article class="similar-card" data-similar-id="${item.id}">
+      <article class="similar-card" data-similar-id="${item.id}" aria-label="Abrir projeto similar: ${item.title}">
         <div class="similar-thumb-wrap">
           <img src="${item.image}" alt="${item.title}" class="similar-thumb" />
         </div>
@@ -1125,10 +1191,8 @@ function renderSimilarProjects(excludeId) {
     .join('');
 
   grid.querySelectorAll('.similar-card').forEach((card) => {
-    card.addEventListener('click', () => {
-      const id = card.getAttribute('data-similar-id');
-      openProjectDetail(id);
-    });
+    const id = card.getAttribute('data-similar-id');
+    bindCardKeyboardActivation(card, () => openProjectDetail(id));
   });
 }
 
@@ -1149,25 +1213,41 @@ document.addEventListener('DOMContentLoaded', () => {
   renderFeaturedProject();
   renderRecommendedProjects();
 
+  // Ativa navegação horizontal por setas nas barras de navegação e abas
+  enableHorizontalArrowNavigation('#primaryCategoryNav', '.cat-link');
+  enableHorizontalArrowNavigation('#campaignTabsList', '.campaign-tab');
+
+  // Skip Link para pular diretamente ao título principal da visão ativa
+  document.getElementById('skipToContentLink').addEventListener('click', (e) => {
+    e.preventDefault();
+    if (currentView === 'home') {
+      document.getElementById('newsHeading').focus();
+    } else if (currentView === 'category') {
+      document.getElementById('categoryPageTitle').focus();
+    } else {
+      document.getElementById('detailTitle').focus();
+    }
+  });
+
   // Logo e links para voltar à Home
   document.getElementById('brandHomeLink').addEventListener('click', (e) => {
     e.preventDefault();
-    showHomeView();
+    showHomeView(true);
   });
 
   document.querySelectorAll('.footer-home-trigger').forEach((link) => {
     link.addEventListener('click', (e) => {
       e.preventDefault();
-      showHomeView();
+      showHomeView(true);
     });
   });
 
   // Botão voltar na tela de detalhes (retorna para Categoria ou Home)
   document.getElementById('backFromDetailBtn').addEventListener('click', () => {
     if (previousView === 'category') {
-      switchView('category');
+      switchView('category', true);
     } else {
-      showHomeView();
+      showHomeView(true);
     }
   });
 
@@ -1247,33 +1327,45 @@ document.addEventListener('DOMContentLoaded', () => {
     renderRecommendedProjects();
   });
 
-  // Banner FAPESP
-  document.getElementById('newsBanner').addEventListener('click', () => {
+  // Banner FAPESP (mouse + teclado)
+  bindCardKeyboardActivation(document.getElementById('newsBanner'), () => {
     showToast('Edital FAPESP 1º semestre 2027: consulte prazos na Pró-Reitoria de Pós-Graduação.');
   });
 
   // Abas internas da página do projeto
   document.querySelectorAll('.campaign-tab').forEach((tab) => {
     tab.addEventListener('click', () => {
-      document.querySelectorAll('.campaign-tab').forEach((t) => t.classList.remove('active'));
+      document.querySelectorAll('.campaign-tab').forEach((t) => {
+        t.classList.remove('active');
+        t.setAttribute('aria-selected', 'false');
+      });
       tab.classList.add('active');
+      tab.setAttribute('aria-selected', 'true');
       activeCampaignTab = tab.getAttribute('data-tab');
       renderCampaignTabContent();
     });
   });
 
   // Modal de apoio financeiro
+  const supportModal = document.getElementById('supportModal');
+  const loginModal = document.getElementById('loginModal');
+
   document.getElementById('openSupportModalBtn').addEventListener('click', () => {
     document.getElementById('supportModalProjectName').textContent = activeProject.title;
-    document.getElementById('supportModal').hidden = false;
+    openAccessibleModal(supportModal);
   });
 
   document.getElementById('barSupportBtn').addEventListener('click', () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    document.getElementById('openSupportModalBtn').focus();
   });
 
   document.getElementById('closeSupportModal').addEventListener('click', () => {
-    document.getElementById('supportModal').hidden = true;
+    closeAccessibleModal(supportModal);
+  });
+
+  supportModal.addEventListener('click', (e) => {
+    if (e.target === supportModal) closeAccessibleModal(supportModal);
   });
 
   document.querySelectorAll('.tier-btn').forEach((tierBtn) => {
@@ -1291,7 +1383,7 @@ document.addEventListener('DOMContentLoaded', () => {
       activeProject.raised += amount;
       activeProject.backers += 1;
       updateFundingSidebarUI(activeProject);
-      document.getElementById('supportModal').hidden = true;
+      closeAccessibleModal(supportModal);
       showToast(`Obrigado! Apoio de ${formatBRL(amount)} registrado no protótipo.`);
     }
   });
@@ -1318,17 +1410,49 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Login modal
   document.getElementById('openLoginBtn').addEventListener('click', () => {
-    document.getElementById('loginModal').hidden = false;
+    openAccessibleModal(loginModal);
   });
 
   document.getElementById('closeLoginModal').addEventListener('click', () => {
-    document.getElementById('loginModal').hidden = true;
+    closeAccessibleModal(loginModal);
+  });
+
+  loginModal.addEventListener('click', (e) => {
+    if (e.target === loginModal) closeAccessibleModal(loginModal);
   });
 
   document.getElementById('loginForm').addEventListener('submit', (e) => {
     e.preventDefault();
-    document.getElementById('loginModal').hidden = true;
+    closeAccessibleModal(loginModal);
     showToast('Login institucional simulado com sucesso!');
+  });
+
+  // Gerenciamento global de teclado para Modais (ESC e Focus Trap)
+  document.addEventListener('keydown', (e) => {
+    const activeModal = !supportModal.hidden ? supportModal : !loginModal.hidden ? loginModal : null;
+    if (!activeModal) return;
+
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      closeAccessibleModal(activeModal);
+      return;
+    }
+
+    if (e.key === 'Tab') {
+      const focusables = getFocusableElements(activeModal);
+      if (focusables.length === 0) return;
+
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    }
   });
 
   document.getElementById('downloadAppBtn').addEventListener('click', () => {
