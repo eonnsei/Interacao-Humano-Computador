@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UFCROWD — Vitrine Acadêmica UFABC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- CABEÇALHO -->
+  <header class="site-header">
+    <div class="container header-top">
+      <a href="#inicio" class="brand" id="brandHomeLink" aria-label="Página inicial UFCROWD">
+        <div class="brand-emblem">
+          <svg width="38" height="34" viewBox="0 0 44 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <circle cx="22" cy="12" r="8.5" stroke="#2E7D63" stroke-width="2.6" />
+            <circle cx="14.5" cy="24.5" r="8.5" stroke="#2E7D63" stroke-width="2.6" />
+            <circle cx="29.5" cy="24.5" r="8.5" stroke="#2E7D63" stroke-width="2.6" />
+          </svg>
+          <span class="brand-ufabc">UFABC</span>
+        </div>
+        <span class="brand-title">UFCROWD</span>
+      </a>
+
+      <div class="header-actions">
+        <button type="button" class="text-link-btn" id="openLoginBtn">Login</button>
+        <button type="button" class="text-link-btn" id="downloadAppBtn">Download</button>
+      </div>
+    </div>
+
+    <div class="header-nav-wrapper">
+      <div class="container header-nav-bar">
+        <div class="nav-spacer" aria-hidden="true"></div>
+
+        <nav class="category-nav" aria-label="Categorias de projetos">
+          <button type="button" class="cat-link" data-category="entidades">Entidades</button>
+          <button type="button" class="cat-link" data-category="pesquisas">Pesquisas</button>
+          <button type="button" class="cat-link" data-category="atleticas">Atléticas</button>
+          <button type="button" class="cat-link" data-category="extensao">Projetos de Extensão</button>
+        </nav>
+
+        <div class="header-socials" aria-label="Redes sociais">
+          <a href="#instagram" aria-label="Instagram" class="social-icon-link">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <rect x="2" y="2" width="20" height="20" rx="5"></rect>
+              <circle cx="12" cy="12" r="4.5"></circle>
+              <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"></circle>
+            </svg>
+          </a>
+          <a href="#linkedin" aria-label="LinkedIn" class="social-icon-link">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <rect x="2" y="2" width="20" height="20" rx="3"></rect>
+              <line x1="7" y1="10" x2="7" y2="17"></line>
+              <circle cx="7" cy="7" r="1" fill="currentColor" stroke="none"></circle>
+              <path d="M11 17v-4a2.5 2.5 0 0 1 5 0v4"></path>
+            </svg>
+          </a>
+          <a href="#x" aria-label="X" class="social-icon-link">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- VISÃO 1: PÁGINA INICIAL (VITRINE) -->
+  <main id="homeView" class="container main-content">
+    <section class="news-section" aria-labelledby="newsHeading">
+      <h1 id="newsHeading" class="section-main-title">Principais notícias UFABC</h1>
+
+      <article class="news-banner" id="newsBanner" tabindex="0" role="button" aria-label="Abrir detalhes do Edital Fapesp">
+        <img
+          src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1400&q=80"
+          alt="Fachada institucional referente ao Edital FAPESP para bolsas de mestrado"
+          class="news-banner-img"
+        />
+        <div class="news-banner-overlay">
+          <h2>Edital Fapesp para bolsas de mestrado 1º semestre 2027</h2>
+        </div>
+        <div class="news-banner-badge">FAPESP • Fundação de Amparo à Pesquisa</div>
+      </article>
+    </section>
+
+    <section class="showcase-grid" aria-label="Vitrine de projetos acadêmicos">
+      <div class="featured-column">
+        <h2 class="column-heading">Projeto em destaque</h2>
+        <article class="featured-card" id="featuredProjectCard"></article>
+      </div>
+
+      <div class="recommended-column">
+        <h2 class="column-heading">Recomendado para você</h2>
+        <div class="recommended-grid" id="recommendedGrid"></div>
+
+        <nav class="pagination" aria-label="Paginação de projetos recomendados">
+          <button type="button" class="page-btn" id="prevPageBtn" aria-label="Página anterior">&lsaquo;</button>
+          <button type="button" class="page-btn active" data-page="1">1</button>
+          <button type="button" class="page-btn" data-page="2">2</button>
+          <button type="button" class="page-btn" data-page="3">3</button>
+          <button type="button" class="page-btn" id="nextPageBtn" aria-label="Próxima página">&rsaquo;</button>
+        </nav>
+      </div>
+    </section>
+  </main>
+
+  <!-- VISÃO 2: PÁGINA DE CATEGORIA (ENTIDADES, PESQUISAS, ATLÉTICAS, EXTENSÃO) -->
+  <section id="categoryView" class="container category-view" hidden aria-labelledby="categoryPageTitle">
+    <div class="category-layout-grid">
+      <!-- Barra lateral de filtros -->
+      <aside class="filters-sidebar-card" aria-label="Filtros da categoria">
+        <div class="filters-header">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+          </svg>
+          <h2>Filtros</h2>
+        </div>
+
+        <!-- Grupo 1: Tipo de conteúdo -->
+        <div class="filter-group">
+          <h3 class="filter-group-title">Tipo de conteúdo</h3>
+
+          <label class="filter-check-row">
+            <span class="filter-check-left">
+              <input type="checkbox" class="filter-type-checkbox" value="processos" checked />
+              <span class="custom-checkbox"></span>
+              <span>Processos seletivos</span>
+            </span>
+            <span class="filter-count-pill">458</span>
+          </label>
+
+          <label class="filter-check-row">
+            <span class="filter-check-left">
+              <input type="checkbox" class="filter-type-checkbox" value="premiacoes" checked />
+              <span class="custom-checkbox"></span>
+              <span>Premiações</span>
+            </span>
+            <span class="filter-count-pill">231</span>
+          </label>
+
+          <label class="filter-check-row">
+            <span class="filter-check-left">
+              <input type="checkbox" class="filter-type-checkbox" value="rifas" />
+              <span class="custom-checkbox"></span>
+              <span>Rifas</span>
+            </span>
+            <span class="filter-count-pill">125</span>
+          </label>
+
+          <label class="filter-check-row">
+            <span class="filter-check-left">
+              <input type="checkbox" class="filter-type-checkbox" value="eventos" checked />
+              <span class="custom-checkbox"></span>
+              <span>Eventos</span>
+            </span>
+            <span class="filter-count-pill">672</span>
+          </label>
+
+          <label class="filter-check-row">
+            <span class="filter-check-left">
+              <input type="checkbox" class="filter-type-checkbox" value="competicoes" />
+              <span class="custom-checkbox"></span>
+              <span>Competições</span>
+            </span>
+            <span class="filter-count-pill">97</span>
+          </label>
+
+          <label class="filter-check-row">
+            <span class="filter-check-left">
+              <input type="checkbox" class="filter-type-checkbox" value="outros" />
+              <span class="custom-checkbox"></span>
+              <span>Outros</span>
+            </span>
+            <span class="filter-count-pill">320</span>
+          </label>
+        </div>
+
+        <!-- Grupo 2: Objetivo -->
+        <div class="filter-group">
+          <h3 class="filter-group-title">Objetivo</h3>
+
+          <label class="filter-check-row">
+            <span class="filter-check-left">
+              <input type="checkbox" class="filter-goal-checkbox" value="academico" />
+              <span class="custom-checkbox"></span>
+              <span>Acadêmico</span>
+            </span>
+          </label>
+
+          <label class="filter-check-row">
+            <span class="filter-check-left">
+              <input type="checkbox" class="filter-goal-checkbox" value="social" />
+              <span class="custom-checkbox"></span>
+              <span>Social</span>
+            </span>
+          </label>
+
+          <label class="filter-check-row">
+            <span class="filter-check-left">
+              <input type="checkbox" class="filter-goal-checkbox" value="cultural" />
+              <span class="custom-checkbox"></span>
+              <span>Cultural</span>
+            </span>
+          </label>
+
+          <label class="filter-check-row">
+            <span class="filter-check-left">
+              <input type="checkbox" class="filter-goal-checkbox" value="esportivo" />
+              <span class="custom-checkbox"></span>
+              <span>Esportivo</span>
+            </span>
+          </label>
+
+          <label class="filter-check-row">
+            <span class="filter-check-left">
+              <input type="checkbox" class="filter-goal-checkbox" value="outro" />
+              <span class="custom-checkbox"></span>
+              <span>Outro</span>
+            </span>
+          </label>
+        </div>
+
+        <!-- Grupo 3: Período -->
+        <div class="filter-group">
+          <h3 class="filter-group-title">Período</h3>
+          <div class="period-select-wrap">
+            <svg class="period-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            <select id="filterPeriodSelect" aria-label="Selecionar período">
+              <option value="all">Qualquer período</option>
+              <option value="7d">Últimos 7 dias</option>
+              <option value="30d">Este mês</option>
+              <option value="quad">Quadrimestre atual</option>
+            </select>
+            <svg class="period-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </div>
+        </div>
+
+        <button type="button" class="clear-filters-btn" id="clearFiltersBtn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true">
+            <polyline points="1 4 1 10 7 10"></polyline>
+            <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+          </svg>
+          <span>Limpar filtros</span>
+        </button>
+      </aside>
+
+      <!-- Coluna direita: Título da categoria + Grade 2x3 + Paginação -->
+      <div class="category-results-col">
+        <div class="category-header-bar">
+          <h1 id="categoryPageTitle" class="category-main-heading">Entidades</h1>
+          <span id="categoryResultsCount" class="category-results-meta"></span>
+        </div>
+
+        <div class="category-cards-grid" id="categoryCardsGrid"></div>
+
+        <nav class="pagination category-pagination" aria-label="Paginação da categoria">
+          <button type="button" class="page-btn" id="catPrevPageBtn" aria-label="Página anterior">&lsaquo;</button>
+          <button type="button" class="page-btn cat-page-btn active" data-cat-page="1">1</button>
+          <button type="button" class="page-btn cat-page-btn" data-cat-page="2">2</button>
+          <button type="button" class="page-btn cat-page-btn" data-cat-page="3">3</button>
+          <button type="button" class="page-btn" id="catNextPageBtn" aria-label="Próxima página">&rsaquo;</button>
+        </nav>
+      </div>
+    </div>
+  </section>
+
+  <!-- VISÃO 3: PÁGINA DE DETALHES DA ENTIDADE / PROJETO (ESTILO KICKSTARTER) -->
+  <section id="projectDetailView" class="project-detail-view" hidden aria-label="Detalhes do projeto">
+    <div class="container detail-hero-container">
+      <div class="detail-breadcrumb-row">
+        <button type="button" class="back-showcase-btn" id="backFromDetailBtn">
+          &larr; Voltar à página inicial
+        </button>
+      </div>
+
+      <div class="detail-title-block">
+        <h1 id="detailTitle" class="detail-main-title"></h1>
+        <p id="detailSubtitle" class="detail-subtitle"></p>
+      </div>
+
+      <div class="detail-top-grid">
+        <div class="detail-media-col">
+          <div class="detail-hero-img-wrap">
+            <img id="detailMainImg" src="" alt="" class="detail-hero-img" />
+          </div>
+          <p id="detailLeadDesc" class="detail-lead-desc"></p>
+        </div>
+
+        <aside class="detail-funding-col" aria-label="Informações de financiamento e apoio">
+          <div class="funding-category-badge">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+              <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+            </svg>
+            <span id="detailBadgeLabel">Projeto Acadêmico</span>
+          </div>
+
+          <div id="financialSupportBlock">
+            <div class="funding-amount" id="detailRaisedAmount">R$ 5.250</div>
+            <div class="funding-goal-text" id="detailGoalText">de uma meta de R$ 10.000</div>
+
+            <div class="funding-progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" id="detailProgressBar">
+              <div class="funding-progress-fill" id="detailProgressFill"></div>
+            </div>
+
+            <div class="funding-metrics-grid">
+              <div class="metric-item">
+                <span class="metric-value" id="detailBackersCount">128</span>
+                <span class="metric-label">apoiadores</span>
+              </div>
+              <div class="metric-item">
+                <span class="metric-value metric-with-icon">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <circle cx="12" cy="12" r="9"></circle>
+                    <polyline points="12 7 12 12 15 14"></polyline>
+                  </svg>
+                  <span id="detailDaysLeft">21</span>
+                </span>
+                <span class="metric-label">dias restantes</span>
+              </div>
+              <div class="metric-item">
+                <span class="metric-status-title" id="detailStatusTitle">Meta em</span>
+                <span class="metric-label" id="detailStatusSub">andamento</span>
+              </div>
+            </div>
+          </div>
+
+          <button type="button" class="cta-support-btn" id="openSupportModalBtn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+            </svg>
+            <span id="detailCtaLabel">Apoie este projeto</span>
+          </button>
+
+          <div class="funding-secondary-actions">
+            <button type="button" class="save-project-btn" id="saveProjectBtn" aria-pressed="false">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+              </svg>
+              <span id="saveProjectLabel">Salvar projeto</span>
+            </button>
+
+            <div class="share-mini-icons" aria-label="Compartilhar projeto">
+              <button type="button" class="mini-share-btn" data-share="Facebook" aria-label="Compartilhar no Facebook">f</button>
+              <button type="button" class="mini-share-btn" data-share="X" aria-label="Compartilhar no X">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>
+                </svg>
+              </button>
+              <button type="button" class="mini-share-btn" data-share="WhatsApp" aria-label="Enviar mensagem">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                </svg>
+              </button>
+              <button type="button" class="mini-share-btn" data-share="E-mail" aria-label="Compartilhar por e-mail">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+                  <polyline points="22,6 12,13 2,6"></polyline>
+                </svg>
+              </button>
+              <button type="button" class="mini-share-btn" data-share="Link incorporado" aria-label="Copiar código de incorporação">&lt;/&gt;</button>
+            </div>
+          </div>
+
+          <div class="funding-deadline-box">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2e7d63" stroke-width="2" aria-hidden="true">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="16" x2="12" y2="12"></line>
+              <line x1="12" y1="8" x2="12.01" y2="8"></line>
+            </svg>
+            <p id="detailDeadlineText">
+              Este projeto será financiado até o dia <strong>15 de dezembro de 2026</strong>, às 23h59 (horário de Brasília).
+            </p>
+          </div>
+        </aside>
+      </div>
+    </div>
+
+    <div class="campaign-tabs-bar">
+      <div class="container campaign-tabs-inner">
+        <nav class="campaign-tabs-list" aria-label="Seções do projeto">
+          <button type="button" class="campaign-tab active" data-tab="campanha">Campanha</button>
+          <button type="button" class="campaign-tab" data-tab="recompensas">Recompensas</button>
+          <button type="button" class="campaign-tab" data-tab="criador">Criador</button>
+          <button type="button" class="campaign-tab" data-tab="faq">
+            Perguntas frequentes <sup id="faqCountBadge">2</sup>
+          </button>
+          <button type="button" class="campaign-tab" data-tab="atualizacoes">
+            Atualizações <sup id="updatesCountBadge">3</sup>
+          </button>
+          <button type="button" class="campaign-tab" data-tab="comentarios">
+            Comentários <sup id="commentsCountBadge">48</sup>
+          </button>
+          <button type="button" class="campaign-tab" data-tab="comunidade">Comunidade</button>
+        </nav>
+
+        <div class="campaign-bar-actions">
+          <button type="button" class="bar-primary-btn" id="barSupportBtn">Voltar para este projeto</button>
+          <button type="button" class="bar-remind-btn" id="remindMeBtn">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+            </svg>
+            <span>Lembrar-me</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="container campaign-body-container">
+      <div id="campaignTabContent" class="campaign-tab-panel"></div>
+
+      <section class="similar-projects-section" aria-labelledby="similarHeading">
+        <h2 id="similarHeading" class="similar-heading">Veja projetos similares</h2>
+        <div class="similar-projects-grid" id="similarProjectsGrid"></div>
+      </section>
+    </div>
+  </section>
+
+  <!-- RODAPÉ -->
+  <footer class="site-footer">
+    <div class="container footer-top">
+      <div class="footer-brand-col">
+        <div class="footer-logo-group">
+          <div class="brand-emblem">
+            <svg width="42" height="38" viewBox="0 0 44 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <circle cx="22" cy="12" r="8.5" stroke="#399E7B" stroke-width="2.6" />
+              <circle cx="14.5" cy="24.5" r="8.5" stroke="#399E7B" stroke-width="2.6" />
+              <circle cx="29.5" cy="24.5" r="8.5" stroke="#399E7B" stroke-width="2.6" />
+            </svg>
+            <span class="brand-ufabc footer-ufabc-text">UFABC</span>
+          </div>
+          <div class="footer-divider-v"></div>
+          <div>
+            <div class="footer-wordmark">UFCROWD</div>
+            <p class="footer-tagline">
+              Conectando projetos e pessoas da UFABC para transformar ideias em realidade.
+            </p>
+          </div>
+        </div>
+
+        <form class="newsletter-form" id="newsletterForm">
+          <label for="newsletterEmail" class="newsletter-label">Receba novidades</label>
+          <div class="newsletter-input-wrap">
+            <input
+              type="email"
+              id="newsletterEmail"
+              placeholder="Seu e-mail"
+              required
+              aria-label="Seu e-mail para receber novidades"
+            />
+            <button type="submit" class="newsletter-submit" aria-label="Inscrever e-mail">&rarr;</button>
+          </div>
+          <span class="newsletter-feedback" id="newsletterFeedback" role="status"></span>
+        </form>
+
+        <div class="footer-socials">
+          <a href="#instagram" aria-label="Instagram UFCROWD" class="footer-social-circle">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="2" width="20" height="20" rx="5"></rect>
+              <circle cx="12" cy="12" r="4"></circle>
+              <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"></circle>
+            </svg>
+          </a>
+          <a href="#youtube" aria-label="YouTube UFCROWD" class="footer-social-circle">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2 31.4 31.4 0 0 0 0 12a31.4 31.4 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1A31.4 31.4 0 0 0 24 12a31.4 31.4 0 0 0-.5-5.8zM9.6 15.6V8.4l6.3 3.6-6.3 3.6z" />
+            </svg>
+          </a>
+          <a href="#linkedin" aria-label="LinkedIn UFCROWD" class="footer-social-circle">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="2" width="20" height="20" rx="3"></rect>
+              <line x1="7" y1="10" x2="7" y2="17"></line>
+              <circle cx="7" cy="7" r="1" fill="currentColor" stroke="none"></circle>
+              <path d="M11 17v-4a2.5 2.5 0 0 1 5 0v4"></path>
+            </svg>
+          </a>
+          <a href="#x" aria-label="X UFCROWD" class="footer-social-circle">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="footer-links-grid">
+        <div class="footer-col">
+          <h3>Explorar</h3>
+          <ul>
+            <li><a href="#inicio" class="footer-home-trigger">Projetos</a></li>
+            <li><a href="#">Editais e Chamadas</a></li>
+            <li><a href="#">Perguntas Frequentes</a></li>
+            <li><a href="#">Sobre o UFCROWD</a></li>
+            <li><a href="#">Contato</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h3>Institucional</h3>
+          <ul>
+            <li><a href="#">UFABC</a></li>
+            <li><a href="#">Graduação</a></li>
+            <li><a href="#">Pós-Graduação</a></li>
+            <li><a href="#">Pesquisa</a></li>
+            <li><a href="#">Extensão</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h3>Suporte</h3>
+          <ul>
+            <li><a href="#">Central de Ajuda</a></li>
+            <li><a href="#">Fale Conosco</a></li>
+            <li><a href="#">Políticas de Uso</a></li>
+            <li><a href="#">Termos de Serviço</a></li>
+            <li><a href="#">Acessibilidade</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h3>Mais</h3>
+          <ul>
+            <li><a href="#">Novidades</a></li>
+            <li><a href="#">Blog</a></li>
+            <li><a href="#">Projetos em Destaque</a></li>
+            <li><a href="#">Aplicativo Mobile</a></li>
+            <li><a href="#">Pesquisa</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-legal-bar">
+      <div class="container footer-legal-inner">
+        <div class="legal-links">
+          <span>&copy; 2026 UFCROWD. Todos os direitos reservados.</span>
+          <span class="sep">|</span>
+          <a href="#">Termos de Uso</a>
+          <span class="sep">|</span>
+          <a href="#">Política de Privacidade</a>
+          <span class="sep">|</span>
+          <a href="#">Política de Cookies</a>
+          <span class="sep">|</span>
+          <a href="#">Acessibilidade</a>
+        </div>
+        <div class="legal-uni">Universidade Federal do ABC</div>
+      </div>
+    </div>
+
+    <div class="footer-a11y-bar">
+      <div class="container a11y-controls">
+        <button type="button" class="a11y-btn" id="vlibrasBtn">
+          <span class="a11y-icon" aria-hidden="true">&#9995;</span>
+          <span>VLibras</span>
+        </button>
+        <span class="sep">|</span>
+        <button type="button" class="a11y-btn" id="contrastBtn" aria-pressed="false">
+          <span class="a11y-icon" aria-hidden="true">&#9680;</span>
+          <span>Alto Contraste</span>
+        </button>
+        <span class="sep">|</span>
+        <button type="button" class="a11y-btn" id="fontSizeBtn" aria-pressed="false">
+          <span class="a11y-icon" aria-hidden="true">Aa</span>
+          <span>Fonte Grande</span>
+        </button>
+        <span class="sep">|</span>
+        <button type="button" class="a11y-btn" id="talkbackBtn">
+          <span class="a11y-icon" aria-hidden="true">&#128266;</span>
+          <span>TalkBack</span>
+        </button>
+      </div>
+    </div>
+  </footer>
+
+  <!-- MODAL DE APOIO FINANCEIRO / COLABORAÇÃO -->
+  <div class="modal-backdrop" id="supportModal" hidden>
+    <div class="modal-card modal-card-md" role="dialog" aria-modal="true" aria-labelledby="supportModalTitle">
+      <button type="button" class="modal-close" id="closeSupportModal" aria-label="Fechar janela">&times;</button>
+      <div class="modal-body">
+        <span class="badge-goal" id="supportModalBadge">Apoio Financeiro Acadêmico</span>
+        <h3 id="supportModalTitle">Apoiar este projeto</h3>
+        <p class="modal-sub" id="supportModalProjectName"></p>
+
+        <form id="supportContributionForm" class="support-form">
+          <label class="support-label">Escolha uma cota de apoio (R$):</label>
+          <div class="tier-options">
+            <button type="button" class="tier-btn active" data-amount="25">
+              <strong>R$ 25</strong>
+              <span>Apoio Estudantil + Nome nos agradecimentos</span>
+            </button>
+            <button type="button" class="tier-btn" data-amount="75">
+              <strong>R$ 75</strong>
+              <span>Apoio Pesquisa + Relatório digital ilustrado</span>
+            </button>
+            <button type="button" class="tier-btn" data-amount="200">
+              <strong>R$ 200</strong>
+              <span>Patrocínio de Laboratório / Entidade + Visita guiada</span>
+            </button>
+          </div>
+
+          <label for="customSupportAmount" class="support-label">Ou informe outro valor (R$):</label>
+          <input type="number" id="customSupportAmount" min="5" step="5" value="25" required />
+
+          <button type="submit" class="btn-primary full-width">Confirmar Apoio ao Projeto</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL DE LOGIN INSTITUCIONAL -->
+  <div class="modal-backdrop" id="loginModal" hidden>
+    <div class="modal-card modal-card-sm" role="dialog" aria-modal="true" aria-labelledby="loginModalTitle">
+      <button type="button" class="modal-close" id="closeLoginModal" aria-label="Fechar login">&times;</button>
+      <div class="modal-body">
+        <h3 id="loginModalTitle">Acesso Institucional UFABC</h3>
+        <p class="modal-sub">Entre com seu e-mail institucional para cadastrar ou apoiar projetos.</p>
+        <form id="loginForm" class="login-form">
+          <label for="ufabcEmail">E-mail institucional</label>
+          <input type="email" id="ufabcEmail" placeholder="nome.sobrenome@aluno.ufabc.edu.br" required />
+          <label for="ufabcPass">Senha</label>
+          <input type="password" id="ufabcPass" placeholder="••••••••" required />
+          <button type="submit" class="btn-primary full-width">Entrar no UFCROWD</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST DE FEEDBACK -->
+  <div class="toast" id="toastNotification" role="status" aria-live="polite"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
