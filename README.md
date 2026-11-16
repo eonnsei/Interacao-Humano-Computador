@@ -82,7 +82,7 @@ Como o projeto utiliza apenas tecnologias web nativas (sem dependências externa
 
 1. **Clone o repositório:**
    ```bash
-   git clone https://github.com/seu-usuario/ufcrowd.git
+   git clone https://github.com/eonnsei/Interacao-Humano-Computador
    ```
 2. **Acesse a pasta do projeto:**
    ```bash
