@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -14,7 +15,7 @@
   <a href="#mainSkipTarget" class="skip-link" id="skipToContentLink">
     Pular para o conteúdo principal
   </a>
-
+ 
   <!-- CABEÇALHO -->
   <header class="site-header">
     <div class="container header-top">
@@ -29,24 +30,215 @@
         </div>
         <span class="brand-title">UFCROWD</span>
       </a>
-
+ 
       <div class="header-actions">
+        <div class="header-actions">
+        <div class="a11y-menu-anchor">
+          <button
+            type="button"
+            class="header-a11y-trigger"
+            id="openA11yMenuBtn"
+            aria-expanded="false"
+            aria-haspopup="dialog"
+            aria-controls="a11yPopover"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <circle cx="12" cy="5" r="2"></circle>
+              <path d="M4 9h16"></path>
+              <path d="M12 9v6"></path>
+              <path d="M9 21l3-6 3 6"></path>
+            </svg>
+            <span>Acessibilidade</span>
+            <span class="a11y-active-badge" id="a11yActiveCount" hidden>0</span>
+          </button>
+ 
+          <!-- PAINEL FLUTUANTE COMPACTO DE ACESSIBILIDADE -->
+          <div
+            class="a11y-popover"
+            id="a11yPopover"
+            role="dialog"
+            aria-modal="false"
+            aria-labelledby="a11yPopoverTitle"
+            hidden
+          >
+            <div class="a11y-pop-header">
+              <div class="a11y-pop-title-wrap">
+                <span class="a11y-pop-logo" aria-hidden="true">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="5" r="2"></circle>
+                    <path d="M4 9h16"></path>
+                    <path d="M12 9v6"></path>
+                    <path d="M9 21l3-6 3 6"></path>
+                  </svg>
+                </span>
+                <div>
+                  <h2 id="a11yPopoverTitle">Acessibilidade</h2>
+                  <p>Personalize sua experiência de navegação.</p>
+                </div>
+              </div>
+ 
+              <div class="a11y-pop-header-actions">
+                <button type="button" class="a11y-reset-btn" id="resetA11yBtn" title="Reverter todas as configurações">
+                  Restaurar
+                </button>
+                <button type="button" class="a11y-close-btn" id="closeA11yMenuBtn" aria-label="Fechar painel de acessibilidade">
+                  &times;
+                </button>
+              </div>
+            </div>
+ 
+            <div class="a11y-pop-body">
+              <!-- 1. AMBIENTE -->
+              <section class="a11y-group" aria-labelledby="a11yGroupEnv">
+                <div class="a11y-group-head">
+                  <h3 id="a11yGroupEnv">Ambiente</h3>
+                  <span>Ajuste as cores, brilho e animações.</span>
+                </div>
+                <div class="a11y-tiles-grid">
+                  <button type="button" class="a11y-tile" data-a11y="screen-color" aria-pressed="false">
+                    <span class="tile-icon" aria-hidden="true">&#127912;</span>
+                    <span class="tile-label">Cor da tela</span>
+                  </button>
+                  <button type="button" class="a11y-tile" data-a11y="invert-colors" aria-pressed="false">
+                    <span class="tile-icon" aria-hidden="true">&#9680;</span>
+                    <span class="tile-label">Inverter cores</span>
+                  </button>
+                  <button type="button" class="a11y-tile" data-a11y="reduce-white" aria-pressed="false">
+                    <span class="tile-icon" aria-hidden="true">&#9728;</span>
+                    <span class="tile-label">Reduzir branco</span>
+                  </button>
+                  <button type="button" class="a11y-tile" data-a11y="color-filter" aria-pressed="false">
+                    <span class="tile-icon" aria-hidden="true">&#9673;</span>
+                    <span class="tile-label">Filtro de cor</span>
+                  </button>
+                  <button type="button" class="a11y-tile" data-a11y="contrast-level" aria-pressed="false">
+                    <span class="tile-icon" aria-hidden="true">&#9681;</span>
+                    <span class="tile-label" id="tileContrastLabel">Contraste</span>
+                  </button>
+                  <button type="button" class="a11y-tile" data-a11y="auto-brightness" aria-pressed="false">
+                    <span class="tile-icon" aria-hidden="true">&#9788;</span>
+                    <span class="tile-label">Brilho auto</span>
+                  </button>
+                  <button type="button" class="a11y-tile" data-a11y="pause-animations" aria-pressed="false">
+                    <span class="tile-icon" aria-hidden="true">&#9199;</span>
+                    <span class="tile-label">Pausar animações</span>
+                  </button>
+                  <button type="button" class="a11y-tile" data-a11y="screen-orientation" aria-pressed="false">
+                    <span class="tile-icon" aria-hidden="true">&#9635;</span>
+                    <span class="tile-label">Orientação</span>
+                  </button>
+                </div>
+              </section>
+ 
+              <!-- 2. TEXTO -->
+              <section class="a11y-group" aria-labelledby="a11yGroupText">
+                <div class="a11y-group-head">
+                  <h3 id="a11yGroupText">Texto</h3>
+                  <span>Melhore a leitura e a legibilidade.</span>
+                </div>
+                <div class="a11y-tiles-grid">
+                  <button type="button" class="a11y-tile" data-a11y="font-family" aria-pressed="false">
+                    <span class="tile-icon" aria-hidden="true">Aa</span>
+                    <span class="tile-label">Fonte</span>
+                  </button>
+                  <button type="button" class="a11y-tile" data-a11y="bold-text" aria-pressed="false">
+                    <span class="tile-icon" aria-hidden="true"><strong>B</strong></span>
+                    <span class="tile-label">Negrito</span>
+                  </button>
+                  <button type="button" class="a11y-tile" data-a11y="font-size" aria-pressed="false">
+                    <span class="tile-icon" aria-hidden="true">A+</span>
+                    <span class="tile-label" id="tileFontSizeLabel">Tamanho</span>
+                  </button>
+                  <button type="button" class="a11y-tile" data-a11y="font-color" aria-pressed="false">
+                    <span class="tile-icon" aria-hidden="true">&#128167;</span>
+                    <span class="tile-label">Cor da fonte</span>
+                  </button>
+                  <button type="button" class="a11y-tile" data-a11y="text-spacing" aria-pressed="false">
+                    <span class="tile-icon" aria-hidden="true">&#8801;</span>
+                    <span class="tile-label">Espaçamento</span>
+                  </button>
+                  <button type="button" class="a11y-tile" data-a11y="text-contrast" aria-pressed="false">
+                    <span class="tile-icon" aria-hidden="true">&#9682;</span>
+                    <span class="tile-label">Contraste texto</span>
+                  </button>
+                </div>
+              </section>
+ 
+              <!-- 3. SOM -->
+              <section class="a11y-group" aria-labelledby="a11yGroupSound">
+                <div class="a11y-group-head">
+                  <h3 id="a11yGroupSound">Som</h3>
+                  <span>Recursos de leitura assistida.</span>
+                </div>
+                <div class="a11y-tiles-grid">
+                  <button type="button" class="a11y-tile" data-a11y="screen-reader" aria-pressed="false">
+                    <span class="tile-icon" aria-hidden="true">&#128266;</span>
+                    <span class="tile-label">Leitor de tela</span>
+                  </button>
+                  <button type="button" class="a11y-tile" data-a11y="speech-rate" aria-pressed="false">
+                    <span class="tile-icon" aria-hidden="true">&#9201;</span>
+                    <span class="tile-label" id="tileRateLabel">Velocidade 1x</span>
+                  </button>
+                  <button type="button" class="a11y-tile" data-a11y="speech-pitch" aria-pressed="false">
+                    <span class="tile-icon" aria-hidden="true">&#127925;</span>
+                    <span class="tile-label" id="tilePitchLabel">Timbre</span>
+                  </button>
+                  <button type="button" class="a11y-tile" data-a11y="read-page" aria-pressed="false">
+                    <span class="tile-icon" aria-hidden="true">&#128214;</span>
+                    <span class="tile-label">Ler página</span>
+                  </button>
+                </div>
+              </section>
+ 
+              <!-- 4. VÍDEO -->
+              <section class="a11y-group" aria-labelledby="a11yGroupVideo">
+                <div class="a11y-group-head">
+                  <h3 id="a11yGroupVideo">Vídeo</h3>
+                  <span>Recursos para conteúdos audiovisuais.</span>
+                </div>
+                <div class="a11y-tiles-grid a11y-tiles-3">
+                  <button type="button" class="a11y-tile" data-a11y="captions" aria-pressed="false">
+                    <span class="tile-icon" aria-hidden="true">CC</span>
+                    <span class="tile-label">Legendas</span>
+                  </button>
+                  <button type="button" class="a11y-tile" data-a11y="libras" aria-pressed="false">
+                    <span class="tile-icon" aria-hidden="true">&#9995;</span>
+                    <span class="tile-label">Libras</span>
+                  </button>
+                  <button type="button" class="a11y-tile" data-a11y="audio-desc" aria-pressed="false">
+                    <span class="tile-icon" aria-hidden="true">&#127911;</span>
+                    <span class="tile-label">Audiodescrição</span>
+                  </button>
+                </div>
+              </section>
+            </div>
+ 
+            <div class="a11y-pop-footer">
+              <span>As configurações são aplicadas automaticamente e podem ser revertidas a qualquer momento.</span>
+            </div>
+          </div>
+        </div>
+ 
         <button type="button" class="text-link-btn" id="openLoginBtn">Login</button>
+        <span class="user-chip" id="userChip" hidden></span>
+        <button type="button" class="text-link-btn text-link-strong" id="registerEntityBtn" hidden>Cadastrar entidade</button>
+        <button type="button" class="text-link-btn" id="logoutBtn" hidden>Sair</button>
         <button type="button" class="text-link-btn" id="downloadAppBtn">Download</button>
       </div>
+      </div>
     </div>
-
+ 
     <div class="header-nav-wrapper">
       <div class="container header-nav-bar">
         <div class="nav-spacer" aria-hidden="true"></div>
-
+ 
         <nav class="category-nav" id="primaryCategoryNav" aria-label="Categorias de projetos">
           <button type="button" class="cat-link" data-category="entidades">Entidades</button>
           <button type="button" class="cat-link" data-category="pesquisas">Pesquisas</button>
           <button type="button" class="cat-link" data-category="atleticas">Atléticas</button>
           <button type="button" class="cat-link" data-category="extensao">Projetos de Extensão</button>
         </nav>
-
+ 
         <div class="header-socials" aria-label="Redes sociais">
           <a href="#instagram" aria-label="Instagram" class="social-icon-link">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
@@ -72,12 +264,12 @@
       </div>
     </div>
   </header>
-
+ 
   <!-- VISÃO 1: PÁGINA INICIAL (VITRINE) -->
   <main id="homeView" class="container main-content">
     <section class="news-section" aria-labelledby="newsHeading">
       <h1 id="newsHeading" class="section-main-title" tabindex="-1">Principais notícias UFABC</h1>
-
+ 
       <article class="news-banner" id="newsBanner" tabindex="0" role="button" aria-label="Abrir detalhes do Edital Fapesp para bolsas de mestrado 1º semestre 2027">
         <img
           src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1400&q=80"
@@ -90,17 +282,17 @@
         <div class="news-banner-badge">FAPESP • Fundação de Amparo à Pesquisa</div>
       </article>
     </section>
-
+ 
     <section class="showcase-grid" aria-label="Vitrine de projetos acadêmicos">
       <div class="featured-column">
         <h2 class="column-heading">Projeto em destaque</h2>
         <article class="featured-card" id="featuredProjectCard"></article>
       </div>
-
+ 
       <div class="recommended-column">
         <h2 class="column-heading">Recomendado para você</h2>
         <div class="recommended-grid" id="recommendedGrid"></div>
-
+ 
         <nav class="pagination" aria-label="Paginação de projetos recomendados">
           <button type="button" class="page-btn" id="prevPageBtn" aria-label="Página anterior">&lsaquo;</button>
           <button type="button" class="page-btn active" data-page="1" aria-label="Página 1" aria-current="page">1</button>
@@ -111,7 +303,7 @@
       </div>
     </section>
   </main>
-
+ 
   <!-- VISÃO 2: PÁGINA DE CATEGORIA (ENTIDADES, PESQUISAS, ATLÉTICAS, EXTENSÃO) -->
   <section id="categoryView" class="container category-view" hidden aria-labelledby="categoryPageTitle">
     <div class="category-layout-grid">
@@ -123,10 +315,10 @@
           </svg>
           <h2>Filtros</h2>
         </div>
-
+ 
         <div class="filter-group">
           <h3 class="filter-group-title">Tipo de conteúdo</h3>
-
+ 
           <label class="filter-check-row">
             <span class="filter-check-left">
               <input type="checkbox" class="filter-type-checkbox" value="processos" checked />
@@ -135,7 +327,7 @@
             </span>
             <span class="filter-count-pill">458</span>
           </label>
-
+ 
           <label class="filter-check-row">
             <span class="filter-check-left">
               <input type="checkbox" class="filter-type-checkbox" value="premiacoes" checked />
@@ -144,7 +336,7 @@
             </span>
             <span class="filter-count-pill">231</span>
           </label>
-
+ 
           <label class="filter-check-row">
             <span class="filter-check-left">
               <input type="checkbox" class="filter-type-checkbox" value="rifas" />
@@ -153,7 +345,7 @@
             </span>
             <span class="filter-count-pill">125</span>
           </label>
-
+ 
           <label class="filter-check-row">
             <span class="filter-check-left">
               <input type="checkbox" class="filter-type-checkbox" value="eventos" checked />
@@ -162,7 +354,7 @@
             </span>
             <span class="filter-count-pill">672</span>
           </label>
-
+ 
           <label class="filter-check-row">
             <span class="filter-check-left">
               <input type="checkbox" class="filter-type-checkbox" value="competicoes" />
@@ -171,7 +363,7 @@
             </span>
             <span class="filter-count-pill">97</span>
           </label>
-
+ 
           <label class="filter-check-row">
             <span class="filter-check-left">
               <input type="checkbox" class="filter-type-checkbox" value="outros" />
@@ -181,10 +373,10 @@
             <span class="filter-count-pill">320</span>
           </label>
         </div>
-
+ 
         <div class="filter-group">
           <h3 class="filter-group-title">Objetivo</h3>
-
+ 
           <label class="filter-check-row">
             <span class="filter-check-left">
               <input type="checkbox" class="filter-goal-checkbox" value="academico" />
@@ -192,7 +384,7 @@
               <span>Acadêmico</span>
             </span>
           </label>
-
+ 
           <label class="filter-check-row">
             <span class="filter-check-left">
               <input type="checkbox" class="filter-goal-checkbox" value="social" />
@@ -200,7 +392,7 @@
               <span>Social</span>
             </span>
           </label>
-
+ 
           <label class="filter-check-row">
             <span class="filter-check-left">
               <input type="checkbox" class="filter-goal-checkbox" value="cultural" />
@@ -208,7 +400,7 @@
               <span>Cultural</span>
             </span>
           </label>
-
+ 
           <label class="filter-check-row">
             <span class="filter-check-left">
               <input type="checkbox" class="filter-goal-checkbox" value="esportivo" />
@@ -216,7 +408,7 @@
               <span>Esportivo</span>
             </span>
           </label>
-
+ 
           <label class="filter-check-row">
             <span class="filter-check-left">
               <input type="checkbox" class="filter-goal-checkbox" value="outro" />
@@ -225,7 +417,7 @@
             </span>
           </label>
         </div>
-
+ 
         <div class="filter-group">
           <h3 class="filter-group-title">Período</h3>
           <div class="period-select-wrap">
@@ -246,7 +438,7 @@
             </svg>
           </div>
         </div>
-
+ 
         <button type="button" class="clear-filters-btn" id="clearFiltersBtn">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true">
             <polyline points="1 4 1 10 7 10"></polyline>
@@ -255,16 +447,16 @@
           <span>Limpar filtros</span>
         </button>
       </aside>
-
+ 
       <!-- Coluna direita: Título da categoria + Grade 2x3 + Paginação -->
       <div class="category-results-col">
         <div class="category-header-bar">
           <h1 id="categoryPageTitle" class="category-main-heading" tabindex="-1">Entidades</h1>
           <span id="categoryResultsCount" class="category-results-meta" aria-live="polite"></span>
         </div>
-
+ 
         <div class="category-cards-grid" id="categoryCardsGrid"></div>
-
+ 
         <nav class="pagination category-pagination" aria-label="Paginação da categoria">
           <button type="button" class="page-btn" id="catPrevPageBtn" aria-label="Página anterior">&lsaquo;</button>
           <button type="button" class="page-btn cat-page-btn active" data-cat-page="1" aria-label="Página 1" aria-current="page">1</button>
@@ -275,21 +467,21 @@
       </div>
     </div>
   </section>
-
-  <!-- VISÃO 3: PÁGINA DE DETALHES DA ENTIDADE / PROJETO (ESTILO KICKSTARTER) -->
-  <section id="projectDetailView" class="project-detail-view" hidden aria-label="Detalhes do projeto">
+ 
+  <!-- VISÃO 3A: PÁGINA DE PROJETO COM APOIO FINANCEIRO (ESTILO KICKSTARTER) -->
+  <section id="projectDetailView" class="project-detail-view" hidden aria-label="Detalhes do projeto com financiamento">
     <div class="container detail-hero-container">
       <div class="detail-breadcrumb-row">
         <button type="button" class="back-showcase-btn" id="backFromDetailBtn">
           &larr; Voltar à página inicial
         </button>
       </div>
-
+ 
       <div class="detail-title-block">
         <h1 id="detailTitle" class="detail-main-title" tabindex="-1"></h1>
         <p id="detailSubtitle" class="detail-subtitle"></p>
       </div>
-
+ 
       <div class="detail-top-grid">
         <div class="detail-media-col">
           <div class="detail-hero-img-wrap">
@@ -297,7 +489,7 @@
           </div>
           <p id="detailLeadDesc" class="detail-lead-desc"></p>
         </div>
-
+ 
         <aside class="detail-funding-col" aria-label="Informações de financiamento e apoio">
           <div class="funding-category-badge">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
@@ -306,15 +498,15 @@
             </svg>
             <span id="detailBadgeLabel">Projeto Acadêmico</span>
           </div>
-
+ 
           <div id="financialSupportBlock">
             <div class="funding-amount" id="detailRaisedAmount">R$ 5.250</div>
             <div class="funding-goal-text" id="detailGoalText">de uma meta de R$ 10.000</div>
-
+ 
             <div class="funding-progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-label="Progresso da meta financeira" id="detailProgressBar">
               <div class="funding-progress-fill" id="detailProgressFill"></div>
             </div>
-
+ 
             <div class="funding-metrics-grid">
               <div class="metric-item">
                 <span class="metric-value" id="detailBackersCount">128</span>
@@ -336,14 +528,14 @@
               </div>
             </div>
           </div>
-
+ 
           <button type="button" class="cta-support-btn" id="openSupportModalBtn">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true">
               <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
             </svg>
             <span id="detailCtaLabel">Apoie este projeto</span>
           </button>
-
+ 
           <div class="funding-secondary-actions">
             <button type="button" class="save-project-btn" id="saveProjectBtn" aria-pressed="false">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
@@ -351,7 +543,7 @@
               </svg>
               <span id="saveProjectLabel">Salvar projeto</span>
             </button>
-
+ 
             <div class="share-mini-icons" aria-label="Compartilhar projeto">
               <button type="button" class="mini-share-btn" data-share="Facebook" aria-label="Compartilhar no Facebook">f</button>
               <button type="button" class="mini-share-btn" data-share="X" aria-label="Compartilhar no X">
@@ -373,7 +565,7 @@
               <button type="button" class="mini-share-btn" data-share="Link incorporado" aria-label="Copiar código de incorporação">&lt;/&gt;</button>
             </div>
           </div>
-
+ 
           <div class="funding-deadline-box">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2e7d63" stroke-width="2" aria-hidden="true">
               <circle cx="12" cy="12" r="10"></circle>
@@ -387,7 +579,7 @@
         </aside>
       </div>
     </div>
-
+ 
     <div class="campaign-tabs-bar">
       <div class="container campaign-tabs-inner">
         <div class="campaign-tabs-list" id="campaignTabsList" role="tablist" aria-label="Seções do projeto">
@@ -405,7 +597,7 @@
           </button>
           <button type="button" role="tab" aria-selected="false" class="campaign-tab" data-tab="comunidade">Comunidade</button>
         </div>
-
+ 
         <div class="campaign-bar-actions">
           <button type="button" class="bar-primary-btn" id="barSupportBtn">Voltar para este projeto</button>
           <button type="button" class="bar-remind-btn" id="remindMeBtn">
@@ -417,17 +609,179 @@
         </div>
       </div>
     </div>
-
+ 
     <div class="container campaign-body-container">
       <div id="campaignTabContent" class="campaign-tab-panel" role="tabpanel"></div>
-
+ 
       <section class="similar-projects-section" aria-labelledby="similarHeading">
         <h2 id="similarHeading" class="similar-heading">Veja projetos similares</h2>
         <div class="similar-projects-grid" id="similarProjectsGrid"></div>
       </section>
     </div>
   </section>
-
+ 
+  <!-- VISÃO 3B: PÁGINA DE VITRINE INSTITUCIONAL (SEM APOIO FINANCEIRO OBRIGATÓRIO) -->
+  <section id="entityProfileView" class="entity-profile-view" hidden aria-labelledby="entityProfileTitle">
+    <!-- Banner de largura total -->
+    <div class="entity-full-banner" id="entityFullBanner">
+      <img id="entityFullBannerImg" src="" alt="" class="entity-full-banner-img" />
+    </div>
+ 
+    <div class="container entity-profile-container">
+      <div class="detail-breadcrumb-row">
+        <button type="button" class="back-showcase-btn" id="backFromProfileBtn">
+          &larr; Voltar para Entidades
+        </button>
+      </div>
+ 
+      <!-- Cabeçalho com emblema circular + título + ícones de compartilhamento -->
+      <div class="entity-profile-header">
+        <div class="entity-profile-avatar" id="entityProfileAvatar" aria-hidden="true"></div>
+ 
+        <div class="entity-profile-title-group">
+          <h1 id="entityProfileTitle" class="entity-profile-title" tabindex="-1"></h1>
+ 
+          <div class="entity-profile-socials" aria-label="Compartilhar página institucional">
+            <button type="button" class="profile-share-circle" data-share="Facebook" aria-label="Compartilhar no Facebook">f</button>
+            <button type="button" class="profile-share-circle" data-share="Twitter" aria-label="Compartilhar no Twitter">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>
+              </svg>
+            </button>
+            <button type="button" class="profile-share-circle" data-share="X" aria-label="Compartilhar no X">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+              </svg>
+            </button>
+            <button type="button" class="profile-share-circle" data-share="E-mail" aria-label="Compartilhar por e-mail">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+                <polyline points="22,6 12,13 2,6"></polyline>
+              </svg>
+            </button>
+            <button type="button" class="profile-share-circle" data-share="Código de incorporação" aria-label="Copiar código de incorporação">&lt;/&gt;</button>
+          </div>
+        </div>
+      </div>
+ 
+      <!-- Texto institucional da entidade / projeto -->
+      <div class="entity-profile-bio" id="entityProfileBio"></div>
+ 
+      <!-- Seção Destaques (3 cards horizontais) -->
+      <section class="entity-highlights-section" aria-labelledby="entityHighlightsHeading">
+        <h2 id="entityHighlightsHeading" class="entity-highlights-heading">Destaques</h2>
+        <div class="entity-highlights-grid" id="entityHighlightsGrid"></div>
+      </section>
+    </div>
+  </section>
+ 
+  <!-- VISÃO 4: CADASTRO DA ENTIDADE (DISPONÍVEL APÓS O LOGIN) -->
+  <section id="entityRegisterView" class="container register-view" hidden aria-labelledby="registerTitle">
+    <div class="detail-breadcrumb-row">
+      <button type="button" class="back-showcase-btn" id="backFromRegisterBtn">&larr; Voltar à página inicial</button>
+    </div>
+ 
+    <div class="register-card">
+      <h1 id="registerTitle" class="register-title" tabindex="-1">Cadastrar entidade</h1>
+      <p class="register-lead">Preencha os dados para publicar a página da sua entidade na vitrine do UFCROWD.</p>
+      <p class="register-owner" id="registerOwner"></p>
+ 
+      <form id="entityRegisterForm" class="register-form" novalidate>
+        <p class="register-legend">Campos marcados com asterisco (*) são obrigatórios.</p>
+ 
+        <div class="form-grid">
+          <div class="form-field form-span-2">
+            <label for="entName">Nome da entidade <span class="req" aria-hidden="true">*</span></label>
+            <input type="text" id="entName" autocomplete="organization" maxlength="80" required />
+          </div>
+ 
+          <div class="form-field">
+            <label for="entType">Tipo de entidade <span class="req" aria-hidden="true">*</span></label>
+            <select id="entType" required>
+              <option value="">Selecione</option>
+              <option value="entidades">Entidade estudantil</option>
+              <option value="atleticas">Atlética</option>
+              <option value="extensao">Projeto de extensão</option>
+            </select>
+          </div>
+ 
+          <div class="form-field">
+            <label for="entObjective">Objetivo principal <span class="req" aria-hidden="true">*</span></label>
+            <select id="entObjective" required>
+              <option value="">Selecione</option>
+              <option value="academico">Acadêmico</option>
+              <option value="social">Social</option>
+              <option value="cultural">Cultural</option>
+              <option value="esportivo">Esportivo</option>
+              <option value="outro">Outro</option>
+            </select>
+          </div>
+ 
+          <fieldset class="form-field form-span-2 choice-group">
+            <legend>Esta página recebe apoio financeiro?</legend>
+            <div class="choice-grid">
+              <label class="choice-card">
+                <input type="radio" name="entFunding" value="no" checked />
+                <span><strong>Não, página institucional</strong><span>Vitrine da entidade com apresentação e destaques.</span></span>
+              </label>
+              <label class="choice-card">
+                <input type="radio" name="entFunding" value="yes" />
+                <span><strong>Sim, com meta de arrecadação</strong><span>Página de campanha com meta, prazo e botão de apoio.</span></span>
+              </label>
+            </div>
+          </fieldset>
+ 
+          <div class="form-field" id="fundingGoalField" hidden>
+            <label for="entGoal">Meta de arrecadação (R$) <span class="req" aria-hidden="true">*</span></label>
+            <input type="number" id="entGoal" inputmode="numeric" min="100" disabled />
+          </div>
+ 
+          <div class="form-field" id="fundingDeadlineField" hidden>
+            <label for="entDeadline">Data limite da campanha <span class="req" aria-hidden="true">*</span></label>
+            <input type="date" id="entDeadline" disabled />
+          </div>
+ 
+          <div class="form-field form-span-2">
+            <label for="entTagline">Frase de apresentação <span class="req" aria-hidden="true">*</span></label>
+            <input type="text" id="entTagline" maxlength="120" aria-describedby="entTaglineHint" required />
+            <p class="field-hint" id="entTaglineHint">Aparece abaixo do nome da entidade. Até 120 caracteres.</p>
+          </div>
+ 
+          <div class="form-field form-span-2">
+            <label for="entBio">Sobre a entidade <span class="req" aria-hidden="true">*</span></label>
+            <textarea id="entBio" rows="5" minlength="40" aria-describedby="entBioHint" required></textarea>
+            <p class="field-hint" id="entBioHint">Conte o que a entidade faz e quem pode participar. Mínimo de 40 caracteres.</p>
+          </div>
+ 
+          <div class="form-field">
+            <label for="entEmail">E-mail de contato <span class="req" aria-hidden="true">*</span></label>
+            <input type="email" id="entEmail" autocomplete="email" required />
+          </div>
+ 
+          <div class="form-field">
+            <label for="entPhone">Telefone ou WhatsApp (opcional)</label>
+            <input type="tel" id="entPhone" autocomplete="tel" />
+          </div>
+ 
+          <div class="form-field form-span-2">
+            <label for="entLink">Instagram ou site (opcional)</label>
+            <input type="url" id="entLink" autocomplete="url" placeholder="https://" />
+          </div>
+ 
+          <div class="form-field form-span-2 form-check">
+            <input type="checkbox" id="entDecl" required />
+            <label for="entDecl">Declaro que represento esta entidade e que as informações acima são verdadeiras. <span class="req" aria-hidden="true">*</span></label>
+          </div>
+        </div>
+ 
+        <div class="register-actions">
+          <button type="submit" class="btn-primary">Cadastrar entidade</button>
+          <button type="button" class="btn-secondary" id="cancelRegisterBtn">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </section>
+ 
   <!-- RODAPÉ -->
   <footer class="site-footer">
     <div class="container footer-top">
@@ -449,7 +803,7 @@
             </p>
           </div>
         </div>
-
+ 
         <form class="newsletter-form" id="newsletterForm">
           <label for="newsletterEmail" class="newsletter-label">Receba novidades</label>
           <div class="newsletter-input-wrap">
@@ -464,7 +818,7 @@
           </div>
           <span class="newsletter-feedback" id="newsletterFeedback" role="status"></span>
         </form>
-
+ 
         <div class="footer-socials">
           <a href="#instagram" aria-label="Instagram UFCROWD" class="footer-social-circle">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -493,7 +847,7 @@
           </a>
         </div>
       </div>
-
+ 
       <div class="footer-links-grid">
         <div class="footer-col">
           <h3>Explorar</h3>
@@ -505,7 +859,7 @@
             <li><a href="#">Contato</a></li>
           </ul>
         </div>
-
+ 
         <div class="footer-col">
           <h3>Institucional</h3>
           <ul>
@@ -516,7 +870,7 @@
             <li><a href="#">Extensão</a></li>
           </ul>
         </div>
-
+ 
         <div class="footer-col">
           <h3>Suporte</h3>
           <ul>
@@ -527,7 +881,7 @@
             <li><a href="#">Acessibilidade</a></li>
           </ul>
         </div>
-
+ 
         <div class="footer-col">
           <h3>Mais</h3>
           <ul>
@@ -540,7 +894,7 @@
         </div>
       </div>
     </div>
-
+ 
     <div class="footer-legal-bar">
       <div class="container footer-legal-inner">
         <div class="legal-links">
@@ -557,32 +911,9 @@
         <div class="legal-uni">Universidade Federal do ABC</div>
       </div>
     </div>
-
-    <div class="footer-a11y-bar">
-      <div class="container a11y-controls">
-        <button type="button" class="a11y-btn" id="vlibrasBtn">
-          <span class="a11y-icon" aria-hidden="true">&#9995;</span>
-          <span>VLibras</span>
-        </button>
-        <span class="sep">|</span>
-        <button type="button" class="a11y-btn" id="contrastBtn" aria-pressed="false">
-          <span class="a11y-icon" aria-hidden="true">&#9680;</span>
-          <span>Alto Contraste</span>
-        </button>
-        <span class="sep">|</span>
-        <button type="button" class="a11y-btn" id="fontSizeBtn" aria-pressed="false">
-          <span class="a11y-icon" aria-hidden="true">Aa</span>
-          <span>Fonte Grande</span>
-        </button>
-        <span class="sep">|</span>
-        <button type="button" class="a11y-btn" id="talkbackBtn">
-          <span class="a11y-icon" aria-hidden="true">&#128266;</span>
-          <span>TalkBack</span>
-        </button>
-      </div>
-    </div>
+ 
   </footer>
-
+ 
   <!-- MODAL DE APOIO FINANCEIRO / COLABORAÇÃO -->
   <div class="modal-backdrop" id="supportModal" hidden>
     <div class="modal-card modal-card-md" role="dialog" aria-modal="true" aria-labelledby="supportModalTitle">
@@ -591,7 +922,7 @@
         <span class="badge-goal" id="supportModalBadge">Apoio Financeiro Acadêmico</span>
         <h3 id="supportModalTitle">Apoiar este projeto</h3>
         <p class="modal-sub" id="supportModalProjectName"></p>
-
+ 
         <form id="supportContributionForm" class="support-form">
           <label class="support-label">Escolha uma cota de apoio (R$):</label>
           <div class="tier-options">
@@ -608,16 +939,32 @@
               <span>Patrocínio de Laboratório / Entidade + Visita guiada</span>
             </button>
           </div>
-
+ 
           <label for="customSupportAmount" class="support-label">Ou informe outro valor (R$):</label>
           <input type="number" id="customSupportAmount" min="5" step="5" value="25" required />
-
+ 
           <button type="submit" class="btn-primary full-width">Confirmar Apoio ao Projeto</button>
         </form>
       </div>
     </div>
   </div>
-
+ 
+  <!-- MODAL DE PUBLICAÇÃO / DESTAQUE INSTITUCIONAL -->
+  <div class="modal-backdrop" id="highlightModal" hidden>
+    <div class="modal-card modal-card-md" role="dialog" aria-modal="true" aria-labelledby="highlightModalTitle">
+      <button type="button" class="modal-close" id="closeHighlightModal" aria-label="Fechar publicação">&times;</button>
+      <img id="highlightModalImg" src="" alt="" class="modal-hero-img" />
+      <div class="modal-body">
+        <span class="badge-goal" id="highlightModalMeta"></span>
+        <h3 id="highlightModalTitle"></h3>
+        <p class="modal-sub" id="highlightModalBody"></p>
+        <button type="button" class="btn-primary full-width" id="highlightModalActionBtn">
+          Participar / Saber mais
+        </button>
+      </div>
+    </div>
+  </div>
+ 
   <!-- MODAL DE LOGIN INSTITUCIONAL -->
   <div class="modal-backdrop" id="loginModal" hidden>
     <div class="modal-card modal-card-sm" role="dialog" aria-modal="true" aria-labelledby="loginModalTitle">
@@ -635,10 +982,10 @@
       </div>
     </div>
   </div>
-
+ 
   <!-- TOAST DE FEEDBACK -->
   <div class="toast" id="toastNotification" role="status" aria-live="polite"></div>
-
+ 
   <script src="script.js"></script>
 </body>
 </html>
