@@ -1,0 +1,495 @@
+/* =========================================================
+   VISÃO 3A: PÁGINA DE PROJETO COM FINANCIAMENTO (KICKSTARTER)
+   ========================================================= */
+.detail-hero-container {
+  padding-top: 18px;
+  padding-bottom: 36px;
+}
+
+.detail-breadcrumb-row {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 10px;
+}
+
+.back-showcase-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 4px 6px;
+  transition: color 0.2s;
+}
+
+.back-showcase-btn:hover {
+  color: var(--green-primary);
+}
+
+.detail-title-block {
+  text-align: center;
+  max-width: 820px;
+  margin: 0 auto 28px auto;
+}
+
+.detail-main-title {
+  font-size: 1.55rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.3;
+  margin-bottom: 6px;
+}
+
+.detail-subtitle {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+}
+
+.detail-top-grid {
+  display: grid;
+  grid-template-columns: 1.48fr 1fr;
+  gap: 36px;
+  align-items: start;
+}
+
+.detail-hero-img-wrap {
+  width: 100%;
+  aspect-ratio: 16 / 10.2;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: var(--surface-tint, #f2f4f3);
+  margin-bottom: 24px;
+  border: 1px solid var(--border-light);
+}
+
+.detail-hero-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.detail-lead-desc {
+  font-size: 0.92rem;
+  line-height: 1.65;
+  color: var(--text-secondary);
+}
+
+.detail-funding-col {
+  padding-top: 2px;
+}
+
+.funding-category-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background-color: var(--green-soft);
+  color: var(--green-primary);
+  font-size: 0.76rem;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 999px;
+  margin-bottom: 14px;
+}
+
+.funding-amount {
+  font-size: 2.3rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.funding-goal-text {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-top: 4px;
+  margin-bottom: 14px;
+}
+
+.funding-progress-bar {
+  width: 100%;
+  height: 7px;
+  background-color: var(--surface-tint, #e6eae8);
+  border-radius: 999px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.funding-progress-fill {
+  height: 100%;
+  background-color: var(--green-accent);
+  border-radius: 999px;
+  width: 52.5%;
+  transition: width 0.4s ease;
+}
+
+.funding-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border-light);
+  margin-bottom: 20px;
+}
+
+.metric-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.metric-value {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+
+.metric-with-icon {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.metric-status-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.35;
+}
+
+.metric-label {
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.cta-support-btn {
+  width: 100%;
+  background-color: var(--green-accent);
+  color: #ffffff;
+  border: none;
+  border-radius: 999px;
+  padding: 13px 20px;
+  font-family: inherit;
+  font-size: 0.94rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.15s;
+  margin-bottom: 14px;
+}
+
+.cta-support-btn:hover {
+  background-color: var(--green-primary);
+}
+
+.funding-secondary-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.save-project-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background-color: var(--bg-page);
+  border: 1px solid #d4d9d7;
+  border-radius: 6px;
+  padding: 8px 14px;
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.save-project-btn:hover,
+.save-project-btn[aria-pressed='true'] {
+  border-color: var(--green-primary);
+  color: var(--green-primary);
+}
+
+.share-mini-icons {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.mini-share-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid #e1e5e3;
+  background: var(--bg-page);
+  color: var(--text-secondary);
+  font-size: 0.72rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.mini-share-btn:hover {
+  border-color: var(--green-primary);
+  color: var(--green-primary);
+}
+
+.funding-deadline-box {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background-color: var(--surface-tint, #f6faf8);
+  border: 1px solid #d7e7e0;
+  border-radius: 8px;
+  padding: 13px 14px;
+  font-size: 0.77rem;
+  line-height: 1.45;
+  color: var(--text-secondary);
+}
+
+.funding-deadline-box svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.campaign-tabs-bar {
+  border-top: 1px solid var(--border-light);
+  border-bottom: 1px solid var(--border-light);
+  background-color: var(--bg-page);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.campaign-tabs-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 54px;
+  flex-wrap: wrap;
+}
+
+.campaign-tabs-list {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  overflow-x: auto;
+}
+
+.campaign-tab {
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 16px 4px;
+  font-family: inherit;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.campaign-tab sup {
+  font-size: 0.66rem;
+  color: var(--green-primary);
+  font-weight: 700;
+  margin-left: 2px;
+}
+
+.campaign-tab:hover {
+  color: var(--text-primary);
+}
+
+.campaign-tab.active {
+  color: var(--text-primary);
+  font-weight: 700;
+  border-bottom-color: var(--green-primary);
+}
+
+.campaign-bar-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 0;
+}
+
+.bar-primary-btn {
+  background-color: var(--green-accent);
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.bar-primary-btn:hover {
+  background-color: var(--green-primary);
+}
+
+.bar-remind-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background-color: var(--bg-page);
+  border: 1px solid #d4d9d7;
+  border-radius: 4px;
+  padding: 7px 12px;
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.bar-remind-btn:hover {
+  border-color: var(--green-primary);
+  color: var(--green-primary);
+}
+
+.campaign-body-container {
+  padding-top: 38px;
+  padding-bottom: 64px;
+}
+
+.campaign-tab-panel {
+  max-width: 960px;
+  margin: 0 auto 52px auto;
+}
+
+.story-heading {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+  letter-spacing: -0.01em;
+}
+
+.story-paragraph {
+  font-size: 0.94rem;
+  line-height: 1.68;
+  color: var(--text-secondary);
+  margin-bottom: 28px;
+}
+
+.story-secondary-img-wrap {
+  max-width: 740px;
+  margin: 0 auto;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.story-secondary-img {
+  width: 100%;
+  max-height: 360px;
+  object-fit: cover;
+  display: block;
+}
+
+.tab-cards-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.info-box-card {
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  padding: 20px;
+  background: var(--bg-page);
+}
+
+.info-box-card h3 {
+  font-size: 1.02rem;
+  margin-bottom: 6px;
+  color: var(--text-primary);
+}
+
+.info-box-card p {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.55;
+}
+
+.info-box-meta {
+  font-size: 0.76rem;
+  color: var(--green-primary);
+  font-weight: 600;
+  margin-bottom: 6px;
+  display: block;
+}
+
+.similar-projects-section {
+  border-top: 1px solid var(--border-light);
+  padding-top: 36px;
+}
+
+.similar-heading {
+  font-size: 1.45rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 22px;
+}
+
+.similar-projects-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.similar-card {
+  cursor: pointer;
+  border-radius: 8px;
+}
+
+.similar-card:hover .similar-card-title,
+.similar-card:focus-visible .similar-card-title {
+  color: var(--green-primary);
+  text-decoration: underline;
+}
+
+.similar-thumb-wrap {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  border-radius: 6px;
+  overflow: hidden;
+  background-color: var(--surface-tint, #f3f4f3);
+  margin-bottom: 10px;
+}
+
+.similar-thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.similar-card-title {
+  font-size: 0.86rem;
+  font-weight: 700;
+  line-height: 1.35;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.similar-card-author {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}

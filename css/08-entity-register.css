@@ -1,0 +1,102 @@
+/* =========================================================
+   LOGIN E CADASTRO DA ENTIDADE
+   ========================================================= */
+.user-chip { font-size: 0.82rem; color: var(--text-secondary); }
+.text-link-strong { font-weight: 700; color: var(--green-primary); }
+
+.register-view { padding-top: 28px; padding-bottom: 64px; }
+.register-card { max-width: 760px; margin: 0 auto; }
+.register-title { font-size: 1.65rem; font-weight: 700; color: var(--green-primary); letter-spacing: -0.01em; }
+.register-lead { margin-top: 6px; max-width: 62ch; color: var(--text-secondary); }
+.register-owner { margin-top: 16px; padding: 10px 14px; border-radius: 6px; background: var(--green-soft); color: var(--green-dark); font-size: 0.86rem; }
+.register-form { margin-top: 24px; }
+.register-legend { margin-bottom: 16px; font-size: 0.84rem; color: var(--text-secondary); }
+
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.form-span-2 { grid-column: 1 / -1; }
+.form-field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.form-field label { font-size: 0.88rem; font-weight: 600; }
+.req { color: #b42318; font-weight: 700; }
+.field-hint { font-size: 0.8rem; color: var(--text-secondary); }
+
+.form-field input:not([type='checkbox']):not([type='radio']),
+.form-field select,
+.form-field textarea {
+  width: 100%;
+  min-height: 2.75rem;
+  padding: 10px 12px;
+  border: 1.5px solid #8a918e;
+  border-radius: 6px;
+  background: var(--surface-bg, #ffffff);
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 0.92rem;
+}
+.form-field textarea { min-height: 8rem; line-height: 1.5; resize: vertical; }
+
+.form-field input:focus,
+.form-field select:focus,
+.form-field textarea:focus {
+  outline: 3px solid var(--green-primary);
+  outline-offset: 1px;
+  border-color: var(--green-primary);
+}
+
+.form-field input[aria-invalid='true'],
+.form-field select[aria-invalid='true'],
+.form-field textarea[aria-invalid='true'] {
+  border-color: #b42318;
+  box-shadow: inset 0 0 0 1px #b42318;
+}
+
+.field-error { font-size: 0.84rem; font-weight: 600; color: #b42318; }
+.field-error::before { content: '\26A0\00a0'; }
+
+.form-check { flex-direction: row; flex-wrap: wrap; align-items: flex-start; column-gap: 10px; }
+.form-check input { width: 1.4rem; height: 1.4rem; accent-color: var(--green-primary); }
+.form-check label { flex: 1 1 0; font-weight: 500; }
+.form-check .field-error { flex-basis: 100%; }
+
+.register-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+.register-actions .btn-primary,
+.btn-secondary { min-height: 2.75rem; padding: 11px 24px; }
+.register-actions .btn-primary { margin-top: 0; }
+.btn-secondary {
+  border: 1.5px solid var(--green-primary);
+  border-radius: 5px;
+  background: var(--surface-bg, #ffffff);
+  color: var(--green-primary);
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.btn-secondary:hover { background: var(--green-soft); }
+
+.form-field[hidden] { display: none; }
+fieldset.form-field { border: 0; min-width: 0; }
+.choice-group legend { margin-bottom: 8px; font-size: 0.88rem; font-weight: 600; }
+.choice-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.choice-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  border: 1.5px solid #8a918e;
+  border-radius: 6px;
+  background: var(--surface-bg, #ffffff);
+  cursor: pointer;
+}
+.choice-card input { flex: none; width: 1.25rem; height: 1.25rem; margin-top: 2px; accent-color: var(--green-primary); }
+.choice-card strong { display: block; font-size: 0.9rem; }
+.choice-card span span { display: block; margin-top: 2px; font-size: 0.8rem; font-weight: 400; color: var(--text-secondary); }
+.choice-card:has(input:checked) { border-color: var(--green-primary); background: var(--green-soft); box-shadow: inset 0 0 0 1px var(--green-primary); }
+.choice-card:has(input:focus-visible) { outline: 3px solid var(--green-primary); outline-offset: 1px; }
+
+@media (max-width: 600px) {
+  .choice-grid { grid-template-columns: 1fr; }
+  .form-grid { grid-template-columns: 1fr; }
+  .form-span-2 { grid-column: auto; }
+  .register-actions > * { flex: 1 1 100%; }
+  .register-title { font-size: 1.4rem; }
+}

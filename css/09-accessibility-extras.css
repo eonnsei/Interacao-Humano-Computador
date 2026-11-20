@@ -1,0 +1,107 @@
+/* =========================================================
+   FILTROS DE COR PARA DALTONISMO (aplicados na raiz, para não afetar elementos fixed)
+   ========================================================= */
+.a11y-filters { position: absolute; width: 0; height: 0; overflow: hidden; }
+html.a11y-cb-protanopia { filter: url(#cbProtanopia); }
+html.a11y-cb-deuteranopia { filter: url(#cbDeuteranopia); }
+html.a11y-cb-tritanopia { filter: url(#cbTritanopia); }
+html.a11y-cb-achromatopsia { filter: grayscale(1); }
+html.a11y-invert.a11y-cb-protanopia { filter: invert(1) hue-rotate(180deg) url(#cbProtanopia); }
+html.a11y-invert.a11y-cb-deuteranopia { filter: invert(1) hue-rotate(180deg) url(#cbDeuteranopia); }
+html.a11y-invert.a11y-cb-tritanopia { filter: invert(1) hue-rotate(180deg) url(#cbTritanopia); }
+html.a11y-invert.a11y-cb-achromatopsia { filter: invert(1) hue-rotate(180deg) grayscale(1); }
+
+/* =========================================================
+   COR DA TELA PERSONALIZADA (--user-bg e --user-fg vêm do painel)
+   ========================================================= */
+body.a11y-custom-screen {
+  --bg-page: var(--user-bg);
+  --surface-bg: var(--user-bg);
+  --text-primary: var(--user-fg);
+  --text-secondary: var(--user-fg);
+  --text-muted: var(--user-fg);
+  --text-ink: var(--user-fg);
+  --surface-tint: color-mix(in srgb, var(--user-fg) 7%, var(--user-bg));
+  --green-soft: var(--surface-tint);
+  --green-pill-bg: color-mix(in srgb, var(--user-fg) 14%, var(--user-bg));
+  --border-light: color-mix(in srgb, var(--user-fg) 25%, var(--user-bg));
+}
+
+.a11y-color-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px solid var(--border-light);
+  border-radius: 10px;
+}
+.a11y-color-editor[hidden] { display: none; }
+.a11y-preset-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+.a11y-preset { min-height: 2.75rem; border: 2px solid #8a918e; border-radius: 8px; font-family: inherit; font-weight: 700; cursor: pointer; }
+.a11y-preset[aria-pressed='true'] { outline: 3px solid var(--green-primary); outline-offset: 1px; }
+.a11y-color-fields { display: flex; flex-wrap: wrap; gap: 14px; }
+.a11y-color-fields label { display: flex; align-items: center; gap: 8px; font-size: 0.82rem; font-weight: 600; }
+.a11y-color-fields input[type='color'] { width: 3rem; height: 2.5rem; padding: 2px; border: 1.5px solid #8a918e; border-radius: 6px; background: transparent; cursor: pointer; }
+.a11y-contrast-note { font-size: 0.8rem; font-weight: 600; }
+
+/* =========================================================
+   ZOOM ATÉ 200%: com texto ampliado, aplica o mesmo layout das telas estreitas
+   ========================================================= */
+html.a11y-zoom-lg .a11y-popover { width: min(560px, calc(100vw - 24px)); }
+html.a11y-zoom-lg .a11y-tiles-grid { grid-template-columns: repeat(2, 1fr); }
+html.a11y-zoom-lg .showcase-grid,
+html.a11y-zoom-lg .detail-top-grid,
+html.a11y-zoom-lg .category-layout-grid {
+    grid-template-columns: 1fr;
+  }
+html.a11y-zoom-lg .similar-projects-grid,
+html.a11y-zoom-lg .entity-highlights-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+html.a11y-zoom-lg .footer-top {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+html.a11y-zoom-lg .header-nav-bar {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    padding: 8px 0;
+  }
+html.a11y-zoom-lg .nav-spacer {
+    display: none;
+  }
+html.a11y-zoom-lg .header-socials {
+    justify-content: center;
+  }
+html.a11y-zoom-lg .entity-full-banner {
+    height: 220px;
+  }
+html.a11y-zoom-xl .recommended-grid,
+html.a11y-zoom-xl .similar-projects-grid,
+html.a11y-zoom-xl .category-cards-grid,
+html.a11y-zoom-xl .entity-highlights-grid {
+    grid-template-columns: 1fr;
+  }
+html.a11y-zoom-xl .footer-links-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+html.a11y-zoom-xl .category-nav {
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+html.a11y-zoom-xl .news-banner-overlay h2 {
+    font-size: 1.05rem;
+  }
+html.a11y-zoom-xl .entity-profile-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+html.a11y-zoom-xl .entity-profile-title {
+    font-size: 1.75rem;
+  }
+html.a11y-zoom-xl .choice-grid { grid-template-columns: 1fr; }
+html.a11y-zoom-xl .form-grid { grid-template-columns: 1fr; }
+html.a11y-zoom-xl .form-span-2 { grid-column: auto; }
+html.a11y-zoom-xl .register-actions > * { flex: 1 1 100%; }
+html.a11y-zoom-xl .register-title { font-size: 1.4rem; }
