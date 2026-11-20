@@ -10,7 +10,7 @@ const A11Y_CLASS_TOGGLES = {
   'screen-orientation': ['body', 'a11y-wide-focus'],
   'font-family': ['body', 'a11y-alt-font'],
   'bold-text': ['body', 'a11y-bold-text'],
-  'font-color': ['body', 'a11y-font-color'],
+  
   'text-spacing': ['body', 'a11y-text-spacing'],
   'text-contrast': ['body', 'a11y-text-contrast']
 };
