@@ -11,6 +11,15 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <!-- FILTROS SVG DE DALTONISMO (usados pela opção "Filtro de cor" do painel de acessibilidade) -->
+  <svg class="a11y-filters" width="0" height="0" aria-hidden="true" focusable="false">
+    <defs>
+      <filter id="cbProtanopia"><feColorMatrix type="matrix" values="1 0 0 0 0  0.478897 0.476911 0.044192 0 0  0.597282 -0.688692 1.091410 0 0  0 0 0 1 0" /></filter>
+      <filter id="cbDeuteranopia"><feColorMatrix type="matrix" values="1 0 0 0 0  0.162790 0.725047 0.112165 0 0  0.454695 -0.645392 1.190697 0 0  0 0 0 1 0" /></filter>
+      <filter id="cbTritanopia"><feColorMatrix type="matrix" values="0.741159 -0.407208 0.666049 0 0  0.075098 0.585234 0.339668 0 0  0 0 1 0 0  0 0 0 1 0" /></filter>
+    </defs>
+  </svg>
+ 
   <!-- LINK DE ACESSIBILIDADE PARA PULAR NAVEGAÇÃO -->
   <a href="#mainSkipTarget" class="skip-link" id="skipToContentLink">
     Pular para o conteúdo principal
@@ -95,7 +104,7 @@
                   <span>Ajuste as cores, brilho e animações.</span>
                 </div>
                 <div class="a11y-tiles-grid">
-                  <button type="button" class="a11y-tile" data-a11y="screen-color" aria-pressed="false">
+                  <button type="button" class="a11y-tile" data-a11y="screen-color" aria-pressed="false" aria-expanded="false" aria-controls="screenColorEditor">
                     <span class="tile-icon" aria-hidden="true">&#127912;</span>
                     <span class="tile-label">Cor da tela</span>
                   </button>
@@ -109,7 +118,7 @@
                   </button>
                   <button type="button" class="a11y-tile" data-a11y="color-filter" aria-pressed="false">
                     <span class="tile-icon" aria-hidden="true">&#9673;</span>
-                    <span class="tile-label">Filtro de cor</span>
+                    <span class="tile-label" id="tileColorFilterLabel">Filtro de cor</span>
                   </button>
                   <button type="button" class="a11y-tile" data-a11y="contrast-level" aria-pressed="false">
                     <span class="tile-icon" aria-hidden="true">&#9681;</span>
@@ -127,6 +136,14 @@
                     <span class="tile-icon" aria-hidden="true">&#9635;</span>
                     <span class="tile-label">Orientação</span>
                   </button>
+                </div>
+                <div class="a11y-color-editor" id="screenColorEditor" hidden>
+                  <div class="a11y-preset-row" id="screenPresets" role="group" aria-label="Combinações de cores prontas"></div>
+                  <div class="a11y-color-fields">
+                    <label for="screenBgInput">Fundo <input type="color" id="screenBgInput" value="#f5efe2" /></label>
+                    <label for="screenFgInput">Texto <input type="color" id="screenFgInput" value="#1f2322" /></label>
+                  </div>
+                  <p class="a11y-contrast-note" id="screenContrastNote" role="status"></p>
                 </div>
               </section>
  
@@ -147,7 +164,7 @@
                   </button>
                   <button type="button" class="a11y-tile" data-a11y="font-size" aria-pressed="false">
                     <span class="tile-icon" aria-hidden="true">A+</span>
-                    <span class="tile-label" id="tileFontSizeLabel">Tamanho</span>
+                    <span class="tile-label" id="tileFontSizeLabel">Zoom</span>
                   </button>
                   <button type="button" class="a11y-tile" data-a11y="font-color" aria-pressed="false">
                     <span class="tile-icon" aria-hidden="true">&#128167;</span>

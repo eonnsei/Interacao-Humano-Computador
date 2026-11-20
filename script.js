@@ -1,11 +1,10 @@
-
 /* =========================================================
    BANNERS VETORIAIS E EMBLEMAS DAS ENTIDADES DA UFABC
    ========================================================= */
 function svgToDataUri(svgString) {
   return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svgString.trim())}`;
 }
- 
+
 const ENTITY_EMBLEMS = {
   greenTeam: `
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
@@ -53,7 +52,7 @@ const ENTITY_EMBLEMS = {
     </svg>
   `
 };
- 
+
 const ENTITY_BANNERS = {
   greenTeam: svgToDataUri(`
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 340">
@@ -130,7 +129,7 @@ const ENTITY_BANNERS = {
     </svg>
   `)
 };
- 
+
 const FORM_PREVIEW_THUMB = svgToDataUri(`
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 300">
     <rect width="480" height="300" fill="#f1f5f9"/>
@@ -146,7 +145,7 @@ const FORM_PREVIEW_THUMB = svgToDataUri(`
     <text x="111" y="236" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="600" fill="#ffffff" text-anchor="middle">Enviar</text>
   </svg>
 `);
- 
+
 /* =========================================================
    CATÁLOGO UNIFICADO DE ENTIDADES E PROJETOS
    requiresFunding: true  -> Página de Financiamento Coletivo
@@ -908,14 +907,14 @@ const PROJECTS_CATALOG = [
     commentsCount: 54
   }
 ];
- 
+
 const CATEGORY_TITLES = {
   entidades: 'Entidades',
   pesquisas: 'Pesquisas',
   atleticas: 'Atléticas',
   extensao: 'Projetos de Extensão'
 };
- 
+
 let currentView = 'home';
 let previousView = 'home';
 let currentHomePage = 1;
@@ -925,14 +924,14 @@ let activeProject = PROJECTS_CATALOG[0];
 let activeCampaignTab = 'campanha';
 let lastFocusedBeforeModal = null;
 let currentUser = null; // { email, name } após o login
- 
+
 const clockIconSvg = `
   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
     <circle cx="12" cy="12" r="9"></circle>
     <polyline points="12 7 12 12 15 14"></polyline>
   </svg>
 `;
- 
+
 function formatBRL(value) {
   return value.toLocaleString('pt-BR', {
     style: 'currency',
@@ -940,7 +939,7 @@ function formatBRL(value) {
     maximumFractionDigits: 0
   });
 }
- 
+
 /* =========================================================
    UTILITÁRIOS DE ACESSIBILIDADE E NAVEGAÇÃO POR TECLADO
    ========================================================= */
@@ -955,16 +954,16 @@ function bindCardKeyboardActivation(element, onActivate) {
     }
   });
 }
- 
+
 function enableHorizontalArrowNavigation(containerSelector, itemSelector) {
   const container = document.querySelector(containerSelector);
   if (!container) return;
- 
+
   container.addEventListener('keydown', (e) => {
     const items = Array.from(container.querySelectorAll(itemSelector));
     const currentIndex = items.indexOf(document.activeElement);
     if (currentIndex === -1) return;
- 
+
     let nextIndex = null;
     if (e.key === 'ArrowRight') {
       nextIndex = (currentIndex + 1) % items.length;
@@ -975,14 +974,14 @@ function enableHorizontalArrowNavigation(containerSelector, itemSelector) {
     } else if (e.key === 'End') {
       nextIndex = items.length - 1;
     }
- 
+
     if (nextIndex !== null) {
       e.preventDefault();
       items[nextIndex].focus();
     }
   });
 }
- 
+
 function getFocusableElements(container) {
   return Array.from(
     container.querySelectorAll(
@@ -990,7 +989,7 @@ function getFocusableElements(container) {
     )
   ).filter((el) => el.offsetParent !== null);
 }
- 
+
 function openAccessibleModal(modalEl) {
   lastFocusedBeforeModal = document.activeElement;
   modalEl.hidden = false;
@@ -999,14 +998,14 @@ function openAccessibleModal(modalEl) {
     focusables[0].focus();
   }
 }
- 
+
 function closeAccessibleModal(modalEl) {
   modalEl.hidden = true;
   if (lastFocusedBeforeModal && typeof lastFocusedBeforeModal.focus === 'function') {
     lastFocusedBeforeModal.focus();
   }
 }
- 
+
 /* =========================================================
    CONTROLE DE TELAS (HOME / CATEGORIA / FINANCIAMENTO / INSTITUCIONAL)
    ========================================================= */
@@ -1017,15 +1016,15 @@ function switchView(targetView, focusHeading = true) {
   document.getElementById('projectDetailView').hidden = targetView !== 'detail';
   document.getElementById('entityProfileView').hidden = targetView !== 'entity-profile';
   document.getElementById('entityRegisterView').hidden = targetView !== 'entity-register';
- 
+
   document.querySelectorAll('.cat-link').forEach((btn) => {
     const isCurrentCat = targetView === 'category' && btn.getAttribute('data-category') === activeCategorySlug;
     btn.classList.toggle('active', isCurrentCat);
     btn.setAttribute('aria-current', isCurrentCat ? 'page' : 'false');
   });
- 
+
   window.scrollTo({ top: 0, behavior: 'smooth' });
- 
+
   if (focusHeading) {
     if (targetView === 'home') {
       document.getElementById('newsHeading').focus({ preventScroll: true });
@@ -1040,11 +1039,11 @@ function switchView(targetView, focusHeading = true) {
     }
   }
 }
- 
+
 function showHomeView(focusHeading = true) {
   switchView('home', focusHeading);
 }
- 
+
 function openCategoryView(categorySlug) {
   activeCategorySlug = categorySlug;
   currentCategoryPage = 1;
@@ -1053,14 +1052,14 @@ function openCategoryView(categorySlug) {
   renderCategoryGrid();
   switchView('category', true);
 }
- 
+
 /* =========================================================
    RENDERIZAÇÃO DA PÁGINA INICIAL (VITRINE)
    ========================================================= */
 function renderFeaturedProject() {
   const container = document.getElementById('featuredProjectCard');
   const project = PROJECTS_CATALOG.find((p) => p.featured) || PROJECTS_CATALOG[0];
- 
+
   container.setAttribute('aria-label', `Abrir projeto em destaque: ${project.title}`);
   container.innerHTML = `
     <div class="featured-thumb-wrap">
@@ -1077,10 +1076,10 @@ function renderFeaturedProject() {
     <p class="featured-desc">${project.shortDesc}</p>
     <span class="goal-pill">${project.goalType}</span>
   `;
- 
+
   bindCardKeyboardActivation(container, () => openProjectDetail(project.id));
 }
- 
+
 function renderRecommendedProjects() {
   const grid = document.getElementById('recommendedGrid');
   const homeRecommendedIds = {
@@ -1088,12 +1087,12 @@ function renderRecommendedProjects() {
     2: ['atletica-geral', 'tamandutech', 'algoritmos-geneticos', 'cursinho-popular'],
     3: ['harpia', 'neurociencia', 'atletica-natacao', 'gpda']
   };
- 
+
   const targetIds = homeRecommendedIds[currentHomePage] || homeRecommendedIds[1];
   const items = targetIds
     .map((id) => PROJECTS_CATALOG.find((p) => p.id === id))
     .filter(Boolean);
- 
+
   grid.innerHTML = items
     .map(
       (item) => `
@@ -1113,13 +1112,13 @@ function renderRecommendedProjects() {
     `
     )
     .join('');
- 
+
   grid.querySelectorAll('.rec-card').forEach((card) => {
     const id = card.getAttribute('data-project-id');
     bindCardKeyboardActivation(card, () => openProjectDetail(id));
   });
 }
- 
+
 function updateHomePaginationUI() {
   document.querySelectorAll('.page-btn[data-page]').forEach((btn) => {
     const pageNum = Number(btn.getAttribute('data-page'));
@@ -1128,7 +1127,7 @@ function updateHomePaginationUI() {
     btn.setAttribute('aria-current', isActive ? 'page' : 'false');
   });
 }
- 
+
 /* =========================================================
    RENDERIZAÇÃO DA PÁGINA DE CATEGORIA E FILTROS
    ========================================================= */
@@ -1138,33 +1137,33 @@ function getActiveFilters() {
   const period = document.getElementById('filterPeriodSelect').value;
   return { checkedTypes, checkedGoals, period };
 }
- 
+
 function renderCategoryGrid() {
   const grid = document.getElementById('categoryCardsGrid');
   const countLabel = document.getElementById('categoryResultsCount');
   const { checkedTypes, checkedGoals, period } = getActiveFilters();
- 
+
   let items = PROJECTS_CATALOG.filter((item) => item.category === activeCategorySlug);
- 
+
   if (checkedTypes.length > 0) {
     items = items.filter((item) => checkedTypes.includes(item.contentType));
   }
- 
+
   if (checkedGoals.length > 0) {
     items = items.filter((item) => checkedGoals.includes(item.objective));
   }
- 
+
   if (period !== 'all') {
     items = items.filter((item) => item.period === period);
   }
- 
+
   const itemsPerPage = 6;
   const startIndex = (currentCategoryPage - 1) * itemsPerPage;
   const paginatedItems = items.slice(startIndex, startIndex + itemsPerPage);
- 
+
   countLabel.textContent =
     items.length === 1 ? '1 resultado encontrado' : `${items.length} resultados encontrados`;
- 
+
   if (paginatedItems.length === 0) {
     grid.innerHTML = `
       <div class="empty-filter-state">
@@ -1173,7 +1172,7 @@ function renderCategoryGrid() {
     `;
     return;
   }
- 
+
   grid.innerHTML = paginatedItems
     .map(
       (item) => `
@@ -1186,13 +1185,13 @@ function renderCategoryGrid() {
     `
     )
     .join('');
- 
+
   grid.querySelectorAll('.entity-showcase-card').forEach((card) => {
     const id = card.getAttribute('data-entity-id');
     bindCardKeyboardActivation(card, () => openProjectDetail(id));
   });
 }
- 
+
 function updateCategoryPaginationUI() {
   document.querySelectorAll('.cat-page-btn').forEach((btn) => {
     const pageNum = Number(btn.getAttribute('data-cat-page'));
@@ -1201,7 +1200,7 @@ function updateCategoryPaginationUI() {
     btn.setAttribute('aria-current', isActive ? 'page' : 'false');
   });
 }
- 
+
 /* =========================================================
    ROTEADOR ENTRE PÁGINA COM FINANCIAMENTO vs. VITRINE INSTITUCIONAL
    ========================================================= */
@@ -1209,49 +1208,49 @@ function openProjectDetail(projectId) {
   if (currentView !== 'detail' && currentView !== 'entity-profile') {
     previousView = currentView;
   }
- 
+
   const project = PROJECTS_CATALOG.find((p) => p.id === projectId) || PROJECTS_CATALOG[0];
   activeProject = project;
- 
+
   if (project.requiresFunding === false) {
     openEntityInstitutionalProfile(project);
     return;
   }
- 
+
   activeCampaignTab = 'campanha';
- 
+
   const backBtn = document.getElementById('backFromDetailBtn');
   if (previousView === 'category') {
     backBtn.innerHTML = `&larr; Voltar para ${CATEGORY_TITLES[activeCategorySlug] || 'Entidades'}`;
   } else {
     backBtn.innerHTML = '&larr; Voltar à página inicial';
   }
- 
+
   document.getElementById('detailTitle').innerHTML = project.title;
   document.getElementById('detailSubtitle').innerHTML = project.subtitle;
   const mainImg = document.getElementById('detailMainImg');
   mainImg.src = project.image;
   mainImg.alt = project.title;
   document.getElementById('detailLeadDesc').innerHTML = project.fullDesc;
- 
+
   document.getElementById('detailBadgeLabel').textContent = project.badgeLabel;
   updateFundingSidebarUI(project);
- 
+
   document.getElementById('faqCountBadge').textContent = project.faqsCount;
   document.getElementById('updatesCountBadge').textContent = project.updatesCount;
   document.getElementById('commentsCountBadge').textContent = project.commentsCount;
- 
+
   document.querySelectorAll('.campaign-tab').forEach((tab) => {
     const isCampaign = tab.getAttribute('data-tab') === 'campanha';
     tab.classList.toggle('active', isCampaign);
     tab.setAttribute('aria-selected', String(isCampaign));
   });
- 
+
   renderCampaignTabContent();
   renderSimilarProjects(project.id);
   switchView('detail', true);
 }
- 
+
 /* =========================================================
    VISÃO 3B: PÁGINA INSTITUCIONAL (SEM APOIO FINANCEIRO)
    ========================================================= */
@@ -1262,24 +1261,24 @@ function openEntityInstitutionalProfile(entity) {
   } else {
     backBtn.innerHTML = '&larr; Voltar à página inicial';
   }
- 
+
   const bannerImg = document.getElementById('entityFullBannerImg');
   bannerImg.src = entity.heroBannerImage || entity.image;
   bannerImg.alt = `Banner institucional ${entity.title}`;
- 
+
   const emblemMarkup = entity.emblemSvg || ENTITY_EMBLEMS.researchDefault;
   document.getElementById('entityProfileAvatar').innerHTML = emblemMarkup;
   document.getElementById('entityProfileTitle').innerHTML = entity.title;
- 
+
   const paragraphs = entity.bioParagraphs || [entity.fullDesc || entity.shortDesc];
   document.getElementById('entityProfileBio').innerHTML = paragraphs
     .map((text) => `<p>${text}</p>`)
     .join('');
- 
+
   const highlightsGrid = document.getElementById('entityHighlightsGrid');
   const highlights = entity.highlights || [];
   document.querySelector('.entity-highlights-section').hidden = highlights.length === 0;
- 
+
   highlightsGrid.innerHTML = highlights
     .map(
       (item, index) => `
@@ -1298,15 +1297,15 @@ function openEntityInstitutionalProfile(entity) {
     `
     )
     .join('');
- 
+
   highlightsGrid.querySelectorAll('.highlight-card').forEach((card) => {
     const idx = Number(card.getAttribute('data-highlight-index'));
     bindCardKeyboardActivation(card, () => openHighlightModal(entity, highlights[idx]));
   });
- 
+
   switchView('entity-profile', true);
 }
- 
+
 function openHighlightModal(entity, highlight) {
   if (!highlight) return;
   const modal = document.getElementById('highlightModal');
@@ -1318,7 +1317,7 @@ function openHighlightModal(entity, highlight) {
   document.getElementById('highlightModalBody').textContent = highlight.detailBody;
   openAccessibleModal(modal);
 }
- 
+
 /* =========================================================
    VISÃO 3A: FUNÇÕES DA PÁGINA COM FINANCIAMENTO
    ========================================================= */
@@ -1332,11 +1331,11 @@ function updateFundingSidebarUI(project) {
   document.getElementById('detailDaysLeft').textContent = project.daysLeft;
   document.getElementById('detailDeadlineText').innerHTML = `Este projeto será financiado até o dia <strong>${project.deadline}</strong>, às 23h59 (horário de Brasília).`;
 }
- 
+
 function renderCampaignTabContent() {
   const panel = document.getElementById('campaignTabContent');
   const p = activeProject;
- 
+
   if (activeCampaignTab === 'campanha') {
     panel.innerHTML = `
       <h2 class="story-heading">${p.storyHeading}</h2>
@@ -1347,7 +1346,7 @@ function renderCampaignTabContent() {
     `;
     return;
   }
- 
+
   if (activeCampaignTab === 'recompensas') {
     panel.innerHTML = `
       <h2 class="story-heading">Recompensas e Contrapartidas Acadêmicas</h2>
@@ -1371,7 +1370,7 @@ function renderCampaignTabContent() {
     `;
     return;
   }
- 
+
   if (activeCampaignTab === 'criador') {
     panel.innerHTML = `
       <h2 class="story-heading">Sobre a Equipe e Responsáveis</h2>
@@ -1383,7 +1382,7 @@ function renderCampaignTabContent() {
     `;
     return;
   }
- 
+
   if (activeCampaignTab === 'faq') {
     panel.innerHTML = `
       <h2 class="story-heading">Perguntas frequentes</h2>
@@ -1400,7 +1399,7 @@ function renderCampaignTabContent() {
     `;
     return;
   }
- 
+
   if (activeCampaignTab === 'atualizacoes') {
     panel.innerHTML = `
       <h2 class="story-heading">Atualizações</h2>
@@ -1414,7 +1413,7 @@ function renderCampaignTabContent() {
     `;
     return;
   }
- 
+
   if (activeCampaignTab === 'comentarios') {
     panel.innerHTML = `
       <h2 class="story-heading">Comentários da Comunidade (${p.commentsCount})</h2>
@@ -1427,7 +1426,7 @@ function renderCampaignTabContent() {
     `;
     return;
   }
- 
+
   panel.innerHTML = `
     <h2 class="story-heading">Comunidade de Apoiadores</h2>
     <div class="info-box-card">
@@ -1437,11 +1436,11 @@ function renderCampaignTabContent() {
     </div>
   `;
 }
- 
+
 function renderSimilarProjects(excludeId) {
   const grid = document.getElementById('similarProjectsGrid');
   const similar = PROJECTS_CATALOG.filter((p) => p.id !== excludeId).slice(0, 3);
- 
+
   grid.innerHTML = similar
     .map(
       (item) => `
@@ -1455,13 +1454,13 @@ function renderSimilarProjects(excludeId) {
     `
     )
     .join('');
- 
+
   grid.querySelectorAll('.similar-card').forEach((card) => {
     const id = card.getAttribute('data-similar-id');
     bindCardKeyboardActivation(card, () => openProjectDetail(id));
   });
 }
- 
+
 function showToast(message) {
   const toast = document.getElementById('toastNotification');
   toast.textContent = message;
@@ -1471,14 +1470,14 @@ function showToast(message) {
     toast.classList.remove('show');
   }, 3200);
 }
- 
+
 /* =========================================================
    LOGIN E CADASTRO DA ENTIDADE
    ========================================================= */
 function escapeHtml(value) {
   return String(value).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 }
- 
+
 function nameFromEmail(email) {
   return email
     .split('@')[0]
@@ -1487,7 +1486,7 @@ function nameFromEmail(email) {
     .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
     .join(' ');
 }
- 
+
 function updateAuthUI() {
   const loggedIn = Boolean(currentUser);
   document.getElementById('openLoginBtn').hidden = loggedIn;
@@ -1497,7 +1496,7 @@ function updateAuthUI() {
   chip.hidden = !loggedIn;
   chip.textContent = loggedIn ? `Olá, ${currentUser.name.split(' ')[0]}` : '';
 }
- 
+
 function openEntityRegister() {
   if (!currentUser) return;
   document.getElementById('registerOwner').textContent =
@@ -1506,7 +1505,7 @@ function openEntityRegister() {
   if (!email.value) email.value = currentUser.email;
   switchView('entity-register', true);
 }
- 
+
 function setFieldError(field, message) {
   const wrap = field.closest('.form-field');
   let err = wrap.querySelector('.field-error');
@@ -1525,7 +1524,7 @@ function setFieldError(field, message) {
   if (ids.length) field.setAttribute('aria-describedby', ids.join(' '));
   else field.removeAttribute('aria-describedby');
 }
- 
+
 function validateField(field) {
   const v = field.validity;
   let message = '';
@@ -1551,7 +1550,7 @@ function validateField(field) {
   setFieldError(field, message);
   return !message;
 }
- 
+
 function syncFundingFields() {
   const funded = document.querySelector('input[name="entFunding"]:checked').value === 'yes';
   ['fundingGoalField', 'fundingDeadlineField'].forEach((id) => {
@@ -1571,14 +1570,14 @@ function syncFundingFields() {
     document.getElementById('entDeadline').min = tomorrow.toLocaleDateString('sv-SE'); // AAAA-MM-DD, horário local
   }
 }
- 
+
 function resetRegisterForm() {
   const form = document.getElementById('entityRegisterForm');
   form.reset();
   form.querySelectorAll('input, select, textarea').forEach((f) => setFieldError(f, ''));
   syncFundingFields();
 }
- 
+
 function buildEntityFromForm() {
   const val = (id) => document.getElementById(id).value.trim();
   const name = val('entName');
@@ -1587,13 +1586,13 @@ function buildEntityFromForm() {
     words.length ? words.slice(0, 3).map((w) => w.charAt(0).toUpperCase()).join('') : name.slice(0, 2).toUpperCase()
   );
   const label = escapeHtml(name.length > 40 ? `${name.slice(0, 39)}…` : name);
- 
+
   const emblem = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120"><circle cx="60" cy="60" r="52" fill="#eef6f3" stroke="#2e7d63" stroke-width="4"/><text x="60" y="72" font-family="Inter, Arial, sans-serif" font-size="34" font-weight="800" fill="#2e7d63" text-anchor="middle">${initials}</text></svg>`;
   const banner = svgToDataUri(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 340"><rect width="1200" height="340" fill="#215e4a"/><circle cx="600" cy="124" r="68" fill="#eef6f3" stroke="#399e7b" stroke-width="5"/><text x="600" y="140" font-family="Inter, Arial, sans-serif" font-size="46" font-weight="800" fill="#2e7d63" text-anchor="middle">${initials}</text><text x="600" y="262" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="700" fill="#ffffff" text-anchor="middle" letter-spacing="1.5">${label}</text></svg>`);
- 
+
   const contact = [val('entEmail'), val('entPhone'), val('entLink')].filter(Boolean).map(escapeHtml).join(' • ');
   const bio = val('entBio').split(/\n+/).filter(Boolean).map(escapeHtml);
- 
+
   const funded = document.querySelector('input[name="entFunding"]:checked').value === 'yes';
   const entity = {
     id: `${name.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}-${Date.now().toString(36)}`,
@@ -1618,7 +1617,7 @@ function buildEntityFromForm() {
     highlights: [],
     registeredBy: currentUser.email
   };
- 
+
   if (funded) {
     const end = new Date(`${val('entDeadline')}T23:59:00`);
     const typeLabels = { entidades: 'Entidade Estudantil', atleticas: 'Atlética', extensao: 'Projeto de Extensão' };
@@ -1639,7 +1638,7 @@ function buildEntityFromForm() {
   }
   return entity;
 }
- 
+
 function handleEntityRegisterSubmit(e) {
   e.preventDefault();
   const fields = Array.from(e.currentTarget.querySelectorAll('input, select, textarea'));
@@ -1649,7 +1648,7 @@ function handleEntityRegisterSubmit(e) {
     showToast(invalid.length === 1 ? 'Corrija 1 campo para continuar.' : `Corrija ${invalid.length} campos para continuar.`);
     return;
   }
- 
+
   const entity = buildEntityFromForm();
   PROJECTS_CATALOG.unshift(entity);
   resetRegisterForm();
@@ -1657,7 +1656,7 @@ function handleEntityRegisterSubmit(e) {
   openProjectDetail(entity.id);
   showToast('Entidade cadastrada! Esta é a página que o público vai ver.');
 }
- 
+
 /* =========================================================
    INICIALIZAÇÃO E EVENTOS
    ========================================================= */
@@ -1665,10 +1664,10 @@ document.addEventListener('DOMContentLoaded', () => {
   renderFeaturedProject();
   renderRecommendedProjects();
   initAccessibilityMenu();
- 
+
   enableHorizontalArrowNavigation('#primaryCategoryNav', '.cat-link');
   enableHorizontalArrowNavigation('#campaignTabsList', '.campaign-tab');
- 
+
   // Skip Link para pular diretamente ao título principal da visão ativa
   document.getElementById('skipToContentLink').addEventListener('click', (e) => {
     e.preventDefault();
@@ -1684,20 +1683,20 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('detailTitle').focus();
     }
   });
- 
+
   // Logo e links para voltar à Home
   document.getElementById('brandHomeLink').addEventListener('click', (e) => {
     e.preventDefault();
     showHomeView(true);
   });
- 
+
   document.querySelectorAll('.footer-home-trigger').forEach((link) => {
     link.addEventListener('click', (e) => {
       e.preventDefault();
       showHomeView(true);
     });
   });
- 
+
   // Botões voltar nas telas de detalhes (Financiamento e Institucional)
   const handleBackNavigation = () => {
     if (previousView === 'category') {
@@ -1706,10 +1705,10 @@ document.addEventListener('DOMContentLoaded', () => {
       showHomeView(true);
     }
   };
- 
+
   document.getElementById('backFromDetailBtn').addEventListener('click', handleBackNavigation);
   document.getElementById('backFromProfileBtn').addEventListener('click', handleBackNavigation);
- 
+
   // Cliques nas categorias do menu superior
   document.querySelectorAll('.cat-link').forEach((btn) => {
     btn.addEventListener('click', () => {
@@ -1717,7 +1716,7 @@ document.addEventListener('DOMContentLoaded', () => {
       openCategoryView(slug);
     });
   });
- 
+
   // Eventos dos filtros laterais da página de categoria
   document.querySelectorAll('.filter-type-checkbox, .filter-goal-checkbox').forEach((cb) => {
     cb.addEventListener('change', () => {
@@ -1726,13 +1725,13 @@ document.addEventListener('DOMContentLoaded', () => {
       renderCategoryGrid();
     });
   });
- 
+
   document.getElementById('filterPeriodSelect').addEventListener('change', () => {
     currentCategoryPage = 1;
     updateCategoryPaginationUI();
     renderCategoryGrid();
   });
- 
+
   document.getElementById('clearFiltersBtn').addEventListener('click', () => {
     document.querySelectorAll('.filter-type-checkbox, .filter-goal-checkbox').forEach((cb) => {
       cb.checked = false;
@@ -1743,7 +1742,7 @@ document.addEventListener('DOMContentLoaded', () => {
     renderCategoryGrid();
     showToast('Filtros limpos.');
   });
- 
+
   // Paginação da página de categoria
   document.querySelectorAll('.cat-page-btn').forEach((btn) => {
     btn.addEventListener('click', () => {
@@ -1752,19 +1751,19 @@ document.addEventListener('DOMContentLoaded', () => {
       renderCategoryGrid();
     });
   });
- 
+
   document.getElementById('catPrevPageBtn').addEventListener('click', () => {
     currentCategoryPage = currentCategoryPage > 1 ? currentCategoryPage - 1 : 3;
     updateCategoryPaginationUI();
     renderCategoryGrid();
   });
- 
+
   document.getElementById('catNextPageBtn').addEventListener('click', () => {
     currentCategoryPage = currentCategoryPage < 3 ? currentCategoryPage + 1 : 1;
     updateCategoryPaginationUI();
     renderCategoryGrid();
   });
- 
+
   // Paginação da página inicial
   document.querySelectorAll('.page-btn[data-page]').forEach((btn) => {
     btn.addEventListener('click', () => {
@@ -1773,24 +1772,24 @@ document.addEventListener('DOMContentLoaded', () => {
       renderRecommendedProjects();
     });
   });
- 
+
   document.getElementById('prevPageBtn').addEventListener('click', () => {
     currentHomePage = currentHomePage > 1 ? currentHomePage - 1 : 3;
     updateHomePaginationUI();
     renderRecommendedProjects();
   });
- 
+
   document.getElementById('nextPageBtn').addEventListener('click', () => {
     currentHomePage = currentHomePage < 3 ? currentHomePage + 1 : 1;
     updateHomePaginationUI();
     renderRecommendedProjects();
   });
- 
+
   // Banner FAPESP (mouse + teclado)
   bindCardKeyboardActivation(document.getElementById('newsBanner'), () => {
     showToast('Edital FAPESP 1º semestre 2027: consulte prazos na Pró-Reitoria de Pós-Graduação.');
   });
- 
+
   // Abas internas da página do projeto com financiamento
   document.querySelectorAll('.campaign-tab').forEach((tab) => {
     tab.addEventListener('click', () => {
@@ -1804,43 +1803,43 @@ document.addEventListener('DOMContentLoaded', () => {
       renderCampaignTabContent();
     });
   });
- 
+
   // Modais (Apoio Financeiro, Publicação Institucional e Login)
   const supportModal = document.getElementById('supportModal');
   const highlightModal = document.getElementById('highlightModal');
   const loginModal = document.getElementById('loginModal');
- 
+
   document.getElementById('openSupportModalBtn').addEventListener('click', () => {
     document.getElementById('supportModalProjectName').innerHTML = activeProject.title;
     openAccessibleModal(supportModal);
   });
- 
+
   document.getElementById('barSupportBtn').addEventListener('click', () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
     document.getElementById('openSupportModalBtn').focus();
   });
- 
+
   document.getElementById('closeSupportModal').addEventListener('click', () => {
     closeAccessibleModal(supportModal);
   });
- 
+
   supportModal.addEventListener('click', (e) => {
     if (e.target === supportModal) closeAccessibleModal(supportModal);
   });
- 
+
   document.getElementById('closeHighlightModal').addEventListener('click', () => {
     closeAccessibleModal(highlightModal);
   });
- 
+
   highlightModal.addEventListener('click', (e) => {
     if (e.target === highlightModal) closeAccessibleModal(highlightModal);
   });
- 
+
   document.getElementById('highlightModalActionBtn').addEventListener('click', () => {
     closeAccessibleModal(highlightModal);
     showToast('Redirecionando para o canal oficial da entidade na UFABC.');
   });
- 
+
   document.querySelectorAll('.tier-btn').forEach((tierBtn) => {
     tierBtn.addEventListener('click', () => {
       document.querySelectorAll('.tier-btn').forEach((b) => b.classList.remove('active'));
@@ -1848,7 +1847,7 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('customSupportAmount').value = tierBtn.getAttribute('data-amount');
     });
   });
- 
+
   document.getElementById('supportContributionForm').addEventListener('submit', (e) => {
     e.preventDefault();
     const amount = Number(document.getElementById('customSupportAmount').value) || 0;
@@ -1860,7 +1859,7 @@ document.addEventListener('DOMContentLoaded', () => {
       showToast(`Obrigado! Apoio de ${formatBRL(amount)} registrado no protótipo.`);
     }
   });
- 
+
   // Salvar projeto / Lembrar-me / Compartilhar (ambas as telas)
   document.getElementById('saveProjectBtn').addEventListener('click', (e) => {
     const btn = e.currentTarget;
@@ -1869,31 +1868,31 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('saveProjectLabel').textContent = !isSaved ? 'Projeto salvo' : 'Salvar projeto';
     showToast(!isSaved ? 'Projeto adicionado aos seus salvos!' : 'Projeto removido dos salvos.');
   });
- 
+
   document.getElementById('remindMeBtn').addEventListener('click', () => {
     showToast('Lembrete ativado! Você será notificado antes do encerramento da campanha.');
   });
- 
+
   document.querySelectorAll('.mini-share-btn, .profile-share-circle').forEach((btn) => {
     btn.addEventListener('click', () => {
       const channel = btn.getAttribute('data-share');
       showToast(`Link de compartilhamento (${channel}) copiado!`);
     });
   });
- 
+
   // Login modal
   document.getElementById('openLoginBtn').addEventListener('click', () => {
     openAccessibleModal(loginModal);
   });
- 
+
   document.getElementById('closeLoginModal').addEventListener('click', () => {
     closeAccessibleModal(loginModal);
   });
- 
+
   loginModal.addEventListener('click', (e) => {
     if (e.target === loginModal) closeAccessibleModal(loginModal);
   });
- 
+
   document.getElementById('loginForm').addEventListener('submit', (e) => {
     e.preventDefault();
     const email = document.getElementById('ufabcEmail').value.trim();
@@ -1904,7 +1903,7 @@ document.addEventListener('DOMContentLoaded', () => {
     showToast('Login institucional simulado com sucesso!');
     openEntityRegister(); // após o login, segue direto para o cadastro da entidade
   });
- 
+
   // Gerenciamento global de teclado para Modais (ESC e Focus Trap)
   document.addEventListener('keydown', (e) => {
     const activeModal = !supportModal.hidden
@@ -1914,22 +1913,22 @@ document.addEventListener('DOMContentLoaded', () => {
       : !loginModal.hidden
       ? loginModal
       : null;
- 
+
     if (!activeModal) return;
- 
+
     if (e.key === 'Escape') {
       e.preventDefault();
       closeAccessibleModal(activeModal);
       return;
     }
- 
+
     if (e.key === 'Tab') {
       const focusables = getFocusableElements(activeModal);
       if (focusables.length === 0) return;
- 
+
       const first = focusables[0];
       const last = focusables[focusables.length - 1];
- 
+
       if (e.shiftKey && document.activeElement === first) {
         e.preventDefault();
         last.focus();
@@ -1939,11 +1938,11 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
   });
- 
+
   document.getElementById('downloadAppBtn').addEventListener('click', () => {
     showToast('Versão mobile UFCROWD (Android/iOS) em desenvolvimento.');
   });
- 
+
   // Newsletter
   document.getElementById('newsletterForm').addEventListener('submit', (e) => {
     e.preventDefault();
@@ -1952,7 +1951,7 @@ document.addEventListener('DOMContentLoaded', () => {
     feedback.textContent = `E-mail ${input.value} cadastrado com sucesso!`;
     input.value = '';
   });
- 
+
   // Cadastro da entidade (disponível após o login)
   const registerForm = document.getElementById('entityRegisterForm');
   document.getElementById('registerEntityBtn').addEventListener('click', openEntityRegister);
@@ -1965,7 +1964,7 @@ document.addEventListener('DOMContentLoaded', () => {
   registerForm.addEventListener('change', (e) => {
     if (e.target.name === 'entFunding') syncFundingFields();
   });
- 
+
   document.getElementById('logoutBtn').addEventListener('click', () => {
     currentUser = null;
     updateAuthUI();
@@ -1984,19 +1983,20 @@ function initAccessibilityMenu() {
   const popover = document.getElementById('a11yPopover');
   const badge = document.getElementById('a11yActiveCount');
   if (!openBtn || !popover) return;
- 
+
   const state = {
     contrastStep: 0, // 0: normal, 1: médio, 2: alto
     fontSizeStep: 0, // 0: 100%, 1: 112%, 2: 122%
+    colorFilterStep: 0, // 0: nenhum, 1: protanopia, 2: deuteranopia, 3: tritanopia, 4: acromatopsia
     speechRateStep: 0, // 0: 1x, 1: 1.25x, 2: 1.5x
     speechPitchStep: 0, // 0: normal, 1: grave, 2: agudo
     screenReader: false
   };
- 
+
   const rates = [1.0, 1.25, 1.5];
   const pitches = [1.0, 0.8, 1.25];
   const pitchNames = ['Timbre', 'Grave', 'Agudo'];
- 
+
   function speakText(text) {
     if (!('speechSynthesis' in window)) return;
     window.speechSynthesis.cancel();
@@ -2006,13 +2006,13 @@ function initAccessibilityMenu() {
     utterance.pitch = pitches[state.speechPitchStep];
     window.speechSynthesis.speak(utterance);
   }
- 
+
   function updateActiveBadge() {
     const activeCount = popover.querySelectorAll('.a11y-tile[aria-pressed="true"]').length;
     badge.textContent = String(activeCount);
     badge.hidden = activeCount === 0;
   }
- 
+
   function togglePopover(forceOpen) {
     const willOpen = typeof forceOpen === 'boolean' ? forceOpen : popover.hidden;
     popover.hidden = !willOpen;
@@ -2023,26 +2023,26 @@ function initAccessibilityMenu() {
       openBtn.focus();
     }
   }
- 
+
   openBtn.addEventListener('click', (e) => {
     e.stopPropagation();
     togglePopover();
   });
- 
+
   closeBtn.addEventListener('click', () => togglePopover(false));
- 
+
   document.addEventListener('click', (e) => {
     if (!popover.hidden && !popover.contains(e.target) && !openBtn.contains(e.target)) {
       togglePopover(false);
     }
   });
- 
+
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && !popover.hidden) {
       togglePopover(false);
     }
   });
- 
+
   // Leitura assistida ao focar elementos quando "Leitor de tela" está ativo
   document.addEventListener('focusin', (e) => {
     if (!state.screenReader) return;
@@ -2051,17 +2051,111 @@ function initAccessibilityMenu() {
       speakText(label.trim().slice(0, 140));
     }
   });
- 
+
+  const colorFilters = [
+    { id: null, label: 'Filtro de cor', note: 'Filtro de cor desativado.' },
+    { id: 'protanopia', label: 'Protanopia', note: 'Filtro para protanopia (dificuldade com vermelho) ativado.' },
+    { id: 'deuteranopia', label: 'Deuteranopia', note: 'Filtro para deuteranopia (dificuldade com verde) ativado.' },
+    { id: 'tritanopia', label: 'Tritanopia', note: 'Filtro para tritanopia (dificuldade com azul e amarelo) ativado.' },
+    { id: 'achromatopsia', label: 'Acromatopsia', note: 'Filtro em escala de cinza ativado.' }
+  ];
+  const zoomLevels = [100, 125, 150, 175, 200];
+  const screenPresets = [
+    { name: 'Padrão claro', bg: '#ffffff', fg: '#1f2322' },
+    { name: 'Creme', bg: '#f5efe2', fg: '#2b2620' },
+    { name: 'Azul suave', bg: '#e6f0fa', fg: '#12263a' },
+    { name: 'Amarelo sobre preto', bg: '#000000', fg: '#ffe600' },
+    { name: 'Escuro', bg: '#121413', fg: '#f1f3f2' }
+  ];
+  const defaultScreenColors = { bg: '#f5efe2', fg: '#1f2322' };
+  const screenColors = { ...defaultScreenColors };
+  const editor = document.getElementById('screenColorEditor');
+  const bgInput = document.getElementById('screenBgInput');
+  const fgInput = document.getElementById('screenFgInput');
+  const presetRow = document.getElementById('screenPresets');
+
+  function setColorFilter(step) {
+    state.colorFilterStep = step;
+    colorFilters.forEach((f) => f.id && document.documentElement.classList.remove(`a11y-cb-${f.id}`));
+    if (colorFilters[step].id) document.documentElement.classList.add(`a11y-cb-${colorFilters[step].id}`);
+    document.getElementById('tileColorFilterLabel').textContent = colorFilters[step].label;
+  }
+
+  function setZoom(step) {
+    state.fontSizeStep = step;
+    const pct = zoomLevels[step];
+    const root = document.documentElement;
+    root.style.fontSize = pct === 100 ? '' : `${pct}%`;
+    root.classList.toggle('a11y-zoom-lg', pct >= 150);
+    root.classList.toggle('a11y-zoom-xl', pct >= 200);
+    document.getElementById('tileFontSizeLabel').textContent = pct === 100 ? 'Zoom' : `Zoom ${pct}%`;
+  }
+
+  function luminance(hex) {
+    const n = parseInt(hex.slice(1), 16);
+    const ch = (v) => (v / 255 <= 0.03928 ? v / 255 / 12.92 : ((v / 255 + 0.055) / 1.055) ** 2.4);
+    return 0.2126 * ch(n >> 16) + 0.7152 * ch((n >> 8) & 255) + 0.0722 * ch(n & 255);
+  }
+
+  function applyScreenColors() {
+    document.body.style.setProperty('--user-bg', screenColors.bg);
+    document.body.style.setProperty('--user-fg', screenColors.fg);
+    bgInput.value = screenColors.bg;
+    fgInput.value = screenColors.fg;
+    const [hi, lo] = [luminance(screenColors.bg), luminance(screenColors.fg)].sort((a, b) => b - a);
+    const ratio = (hi + 0.05) / (lo + 0.05);
+    document.getElementById('screenContrastNote').textContent =
+      `Contraste ${ratio.toFixed(1).replace('.', ',')}:1 — ` +
+      (ratio >= 7 ? 'excelente.' : ratio >= 4.5 ? 'adequado.' : 'baixo, o texto pode ficar difícil de ler.');
+    presetRow.querySelectorAll('button').forEach((btn, i) => {
+      const p = screenPresets[i];
+      btn.setAttribute('aria-pressed', String(p.bg === screenColors.bg && p.fg === screenColors.fg));
+    });
+  }
+
+  function resetScreenColors() {
+    Object.assign(screenColors, defaultScreenColors);
+    editor.hidden = true;
+    document.body.style.removeProperty('--user-bg');
+    document.body.style.removeProperty('--user-fg');
+    popover.querySelector('[data-a11y="screen-color"]').setAttribute('aria-expanded', 'false');
+  }
+
+  screenPresets.forEach((p) => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'a11y-preset';
+    btn.textContent = 'Aa';
+    btn.title = p.name;
+    btn.setAttribute('aria-label', p.name);
+    btn.style.backgroundColor = p.bg;
+    btn.style.color = p.fg;
+    btn.addEventListener('click', () => {
+      screenColors.bg = p.bg;
+      screenColors.fg = p.fg;
+      applyScreenColors();
+    });
+    presetRow.appendChild(btn);
+  });
+  bgInput.addEventListener('input', () => { screenColors.bg = bgInput.value; applyScreenColors(); });
+  fgInput.addEventListener('input', () => { screenColors.fg = fgInput.value; applyScreenColors(); });
+
   popover.querySelectorAll('.a11y-tile').forEach((tile) => {
     tile.addEventListener('click', () => {
       const action = tile.getAttribute('data-a11y');
       const currentlyPressed = tile.getAttribute('aria-pressed') === 'true';
       const nextPressed = !currentlyPressed;
- 
+
       switch (action) {
         case 'screen-color':
-          document.body.classList.toggle('a11y-screen-color', nextPressed);
+          document.body.classList.toggle('a11y-custom-screen', nextPressed);
+          editor.hidden = !nextPressed;
           tile.setAttribute('aria-pressed', String(nextPressed));
+          tile.setAttribute('aria-expanded', String(nextPressed));
+          if (nextPressed) {
+            applyScreenColors();
+            bgInput.focus();
+          }
           break;
         case 'invert-colors':
           document.documentElement.classList.toggle('a11y-invert', nextPressed);
@@ -2072,8 +2166,9 @@ function initAccessibilityMenu() {
           tile.setAttribute('aria-pressed', String(nextPressed));
           break;
         case 'color-filter':
-          document.body.classList.toggle('a11y-color-filter', nextPressed);
-          tile.setAttribute('aria-pressed', String(nextPressed));
+          setColorFilter((state.colorFilterStep + 1) % colorFilters.length);
+          tile.setAttribute('aria-pressed', String(state.colorFilterStep > 0));
+          showToast(colorFilters[state.colorFilterStep].note);
           break;
         case 'contrast-level': {
           state.contrastStep = (state.contrastStep + 1) % 3;
@@ -2105,16 +2200,11 @@ function initAccessibilityMenu() {
           document.body.classList.toggle('a11y-bold-text', nextPressed);
           tile.setAttribute('aria-pressed', String(nextPressed));
           break;
-        case 'font-size': {
-          state.fontSizeStep = (state.fontSizeStep + 1) % 3;
-          document.documentElement.style.fontSize =
-            state.fontSizeStep === 0 ? '' : state.fontSizeStep === 1 ? '17.5px' : '19px';
-          const lbl = document.getElementById('tileFontSizeLabel');
-          lbl.textContent =
-            state.fontSizeStep === 0 ? 'Tamanho' : state.fontSizeStep === 1 ? 'Fonte 110%' : 'Fonte 120%';
+        case 'font-size':
+          setZoom((state.fontSizeStep + 1) % zoomLevels.length);
           tile.setAttribute('aria-pressed', String(state.fontSizeStep > 0));
+          showToast(`Zoom em ${zoomLevels[state.fontSizeStep]}%.`);
           break;
-        }
         case 'font-color':
           document.body.classList.toggle('a11y-font-color', nextPressed);
           tile.setAttribute('aria-pressed', String(nextPressed));
@@ -2170,18 +2260,19 @@ function initAccessibilityMenu() {
           showToast(nextPressed ? 'Audiodescrição de imagens habilitada.' : 'Audiodescrição desativada.');
           break;
       }
- 
+
       updateActiveBadge();
     });
   });
- 
+
   resetBtn.addEventListener('click', () => {
     document.documentElement.classList.remove('a11y-invert', 'large-font');
-    document.documentElement.style.fontSize = '';
+    setZoom(0);
+    setColorFilter(0);
+    resetScreenColors();
     document.body.classList.remove(
-      'a11y-screen-color',
+      'a11y-custom-screen',
       'a11y-reduce-white',
-      'a11y-color-filter',
       'a11y-medium-contrast',
       'high-contrast',
       'a11y-auto-brightness',
@@ -2199,12 +2290,11 @@ function initAccessibilityMenu() {
     state.speechPitchStep = 0;
     state.screenReader = false;
     if ('speechSynthesis' in window) window.speechSynthesis.cancel();
- 
+
     document.getElementById('tileContrastLabel').textContent = 'Contraste';
-    document.getElementById('tileFontSizeLabel').textContent = 'Tamanho';
     document.getElementById('tileRateLabel').textContent = 'Velocidade 1x';
     document.getElementById('tilePitchLabel').textContent = 'Timbre';
- 
+
     popover.querySelectorAll('.a11y-tile').forEach((tile) => tile.setAttribute('aria-pressed', 'false'));
     updateActiveBadge();
     showToast('Configurações de acessibilidade restauradas.');
