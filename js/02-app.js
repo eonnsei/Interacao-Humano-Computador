@@ -27,6 +27,31 @@ function formatBRL(value) {
   });
 }
 
+function formatProjectMeta(item) {
+  // Caso o item já tenha uma string pronta em pt-BR ou não use financiamento
+  if (item.requiresFunding === false) {
+    return item.meta || '';
+  }
+
+  const days = Number(item.daysLeft);
+  const funded = Number(item.fundedPercent);
+
+  // Fallback caso algum item do catálogo ainda só tenha `item.meta` em texto
+  if (Number.isNaN(days) || Number.isNaN(funded)) {
+    return item.meta || '';
+  }
+
+  const daysText =
+    days <= 0
+      ? 'Encerrado'
+      : days === 1
+      ? '1 dia restante'
+      : `${days} dias restantes`;
+
+  return `${daysText} • ${funded}% financiado`;
+}
+
+
 /* =========================================================
    UTILITÁRIOS DE ACESSIBILIDADE E NAVEGAÇÃO POR TECLADO
    ========================================================= */
@@ -158,7 +183,7 @@ function renderFeaturedProject() {
     </div>
     <div class="project-meta">
       ${project.requiresFunding ? clockIconSvg : ''}
-      <span>${project.meta}</span>
+      <span>${formatProjectMeta(project)}</span>
     </div>
     <p class="featured-desc">${project.shortDesc}</p>
     <span class="goal-pill">${project.goalType}</span>
@@ -193,7 +218,7 @@ function renderRecommendedProjects() {
         </div>
         <div class="rec-meta">
           ${item.requiresFunding ? clockIconSvg : ''}
-          <span>${item.meta}</span>
+          <span>${formatProjectMeta(item)}</span>
         </div>
       </article>
     `
