@@ -139,6 +139,13 @@ body.high-contrast .campaign-tab.active {
   line-height: 1;
 }
 
+.brand-emblem-img {
+  height: 44px;
+  width: auto;
+  display: block;
+  object-fit: contain;
+}
+
 .brand-ufabc {
   font-size: 0.72rem;
   font-weight: 700;
