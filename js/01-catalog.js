@@ -293,7 +293,7 @@ const PROJECTS_CATALOG = [
     daysLeft: 12,
     deadline: '04 de dezembro de 2026',
     image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQVtqp4-hrIhwTfxb4QNWZWxBOozR7vncKE3_8C1TZgQPG0h7VkDZ1-ukA&s=10',
-    secondaryImage: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRxnH6q8L4kzgYtQLqcyV1hXe0zQfu_xxCRVnhTIMSCQA&s=10',
+    secondaryImage: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQVtqp4-hrIhwTfxb4QNWZWxBOozR7vncKE3_8C1TZgQPG0h7VkDZ1-ukA&s=10',
     shortDesc:
       'Equipe oficial de robótica competitiva da UFABC, premiada em torneios nacionais e ' +
         'internacionais de engenharia.',
@@ -819,7 +819,7 @@ const PROJECTS_CATALOG = [
     backers: 142,
     daysLeft: 14,
     deadline: '08 de dezembro de 2026',
-    image: 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&w=900&q=80',
+    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSDIdMpScXcg6RgS8JjVWXHblW9QuhhUcaXImxRVRnksx59uLg25f6l_B_w&s=10',
     secondaryImage: 'https://images.unsplash.com/photo-1526676037777-05a232554f77?auto=format&fit=crop&w=900&q=80',
     shortDesc:
       'Arrecadação de apoio logístico, uniformes e equipamentos de treino para representar a ' +
@@ -854,7 +854,7 @@ const PROJECTS_CATALOG = [
     title: 'Modalidades Aquáticas UFABC — Treinos e Integração Esportiva',
     subtitle: 'Treinos abertos, seletivas e incentivo à prática esportiva universitária.',
     meta: 'Vitrine Esportiva • Treinos e Seletivas',
-    image: 'https://images.unsplash.com/photo-1530549387789-4c1017266635?auto=format&fit=crop&w=900&q=80',
+    image: 'https://abdabauru.com.br/uploads/2572/2025-junho/brasileiro-dia2%20-%20satiro%20sodre%20%282%29.jpg',
     heroBannerImage: 'https://images.unsplash.com/photo-1530549387789-4c1017266635?auto=format&fit=crop&w=1400&q=80',
     emblemSvg: ENTITY_EMBLEMS.researchDefault,
     bioParagraphs: [
@@ -911,7 +911,7 @@ const PROJECTS_CATALOG = [
     backers: 98,
     daysLeft: 11,
     deadline: '03 de dezembro de 2026',
-    image: 'https://images.unsplash.com/photo-1519892300165-cb5542fb47c7?auto=format&fit=crop&w=900&q=80',
+    image: 'https://webradio.ufabc.edu.br/wp-content/uploads/2021/05/40847976220_276f1ac600_o-1024x576.jpg',
     secondaryImage: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=900&q=80',
     shortDesc: 'Troca de peles, baquetas e ensaios abertos para iniciantes sem experiência musical prévia.',
     fullDesc: 'A campanha visa renovar o arsenal de surdos, caixas e repiques utilizados nas ' +
