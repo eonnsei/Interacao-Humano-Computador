@@ -11,6 +11,87 @@ let activeProject = PROJECTS_CATALOG[0];
 let activeCampaignTab = 'campanha';
 let lastFocusedBeforeModal = null;
 let currentUser = null; // { email, name } após o login
+let savedProjectIds = new Set();
+let reminderProjectIds = new Set();
+
+function readLocalStorageSet(key) {
+  try {
+    const value = JSON.parse(localStorage.getItem(key) || '[]');
+    return new Set(Array.isArray(value) ? value : []);
+  } catch {
+    return new Set();
+  }
+}
+
+function writeLocalStorageSet(key, values) {
+  try {
+    localStorage.setItem(key, JSON.stringify(Array.from(values)));
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function deadlineToDate(deadlineText) {
+  if (!deadlineText) return null;
+  const months = {
+    janeiro: 0, fevereiro: 1, março: 2, abril: 3, maio: 4, junho: 5,
+    julho: 6, agosto: 7, setembro: 8, outubro: 9, novembro: 10, dezembro: 11
+  };
+  const match = String(deadlineText).match(/(\d{1,2})\s+de\s+([a-zçã]+)\s+de\s+(\d{4})/i);
+  if (!match || months[match[2].toLowerCase()] === undefined) return null;
+  return new Date(Number(match[3]), months[match[2].toLowerCase()], Number(match[1]), 23, 59, 59, 999);
+}
+
+function calculateDaysLeft(project) {
+  const deadline = deadlineToDate(project?.deadline);
+  if (!deadline) return Number(project?.daysLeft) || 0;
+  return Math.max(0, Math.ceil((deadline.getTime() - Date.now()) / 86400000));
+}
+
+function initLocalPrototypeState() {
+  savedProjectIds = readLocalStorageSet('ufcrowd:saved-projects');
+  reminderProjectIds = readLocalStorageSet('ufcrowd:reminders');
+  try {
+    const savedEntities = JSON.parse(localStorage.getItem('ufcrowd:registered-entities') || '[]');
+    if (Array.isArray(savedEntities)) {
+      savedEntities.forEach((entity) => {
+        if (entity?.id && !PROJECTS_CATALOG.some((item) => item.id === entity.id)) PROJECTS_CATALOG.unshift(entity);
+      });
+    }
+  } catch {
+    // Armazenamento local indisponível ou corrompido: o protótipo segue com o catálogo original.
+  }
+  PROJECTS_CATALOG.forEach((project) => {
+    if (project.requiresFunding) {
+      project.daysLeft = calculateDaysLeft(project);
+      if (project.goal > 0) project.fundedPercent = Math.round((Number(project.raised) / Number(project.goal)) * 100);
+    }
+  });
+}
+
+function makeImageFallback() {
+  return svgToDataUri(`
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500">
+      <rect width="800" height="500" fill="#e8f0eb"/>
+      <path d="M-40 390 Q160 260 360 390 T840 350" fill="none" stroke="#b6c9bd" stroke-width="24"/>
+      <circle cx="620" cy="120" r="80" fill="#d1e0d6"/>
+      <rect x="270" y="150" width="260" height="200" rx="22" fill="#f7f4ec" stroke="#54765e" stroke-width="12"/>
+      <path d="M330 220h140M330 260h110M330 300h90" stroke="#54765e" stroke-width="14" stroke-linecap="round"/>
+      <text x="400" y="430" font-family="Arial,sans-serif" font-size="28" fill="#315d3b" text-anchor="middle">Imagem ilustrativa</text>
+    </svg>
+  `);
+}
+
+function initImageFallbacks() {
+  const fallbackSrc = makeImageFallback();
+  document.addEventListener('error', (event) => {
+    const image = event.target;
+    if (!(image instanceof HTMLImageElement) || image.dataset.fallbackApplied) return;
+    image.dataset.fallbackApplied = 'true';
+    image.src = fallbackSrc;
+  }, true);
+}
 
 const clockIconSvg = `
   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
@@ -33,13 +114,8 @@ function formatProjectMeta(item) {
     return item.meta || '';
   }
 
-  const days = Number(item.daysLeft);
-  const funded = Number(item.fundedPercent);
-
-  // Fallback caso algum item do catálogo ainda só tenha `item.meta` em texto
-  if (Number.isNaN(days) || Number.isNaN(funded)) {
-    return item.meta || '';
-  }
+  const days = calculateDaysLeft(item);
+  const funded = item.goal > 0 ? Math.round((Number(item.raised) / Number(item.goal)) * 100) : Number(item.fundedPercent) || 0;
 
   const daysText =
     days <= 0
@@ -67,7 +143,7 @@ function bindCardKeyboardActivation(element, onActivate) {
   });
 }
 
-function enableHorizontalArrowNavigation(containerSelector, itemSelector) {
+function enableHorizontalArrowNavigation(containerSelector, itemSelector, autoActivate = false) {
   const container = document.querySelector(containerSelector);
   if (!container) return;
 
@@ -90,6 +166,7 @@ function enableHorizontalArrowNavigation(containerSelector, itemSelector) {
     if (nextIndex !== null) {
       e.preventDefault();
       items[nextIndex].focus();
+      if (autoActivate) items[nextIndex].click();
     }
   });
 }
@@ -152,17 +229,132 @@ function switchView(targetView, focusHeading = true) {
   }
 }
 
-function showHomeView(focusHeading = true) {
-  switchView('home', focusHeading);
+/* =========================================================
+   HISTÓRICO E ROTAS (HASH ROUTER LEVE PARA O PROTÓTIPO)
+   ========================================================= */
+function routeHashFor(view, data = {}) {
+  if (view === 'category') return `#categoria/${encodeURIComponent(data.category || activeCategorySlug)}`;
+  if (view === 'detail') return `#projeto/${encodeURIComponent(data.projectId || activeProject?.id || '')}`;
+  if (view === 'entity-profile') return `#entidade/${encodeURIComponent(data.projectId || activeProject?.id || '')}`;
+  if (view === 'entity-register') return '#cadastro';
+  return '#inicio';
 }
 
-function openCategoryView(categorySlug) {
+function getRouteData() {
+  return {
+    view: currentView,
+    category: activeCategorySlug,
+    projectId: activeProject?.id || null,
+    previousView,
+    homePage: currentHomePage,
+    categoryPage: currentCategoryPage,
+    filters: {
+      types: Array.from(document.querySelectorAll('.filter-type-checkbox:checked')).map((el) => el.value),
+      goals: Array.from(document.querySelectorAll('.filter-goal-checkbox:checked')).map((el) => el.value),
+      period: document.getElementById('filterPeriodSelect')?.value || 'all'
+    }
+  };
+}
+
+function commitRoute({ replace = false, parentHash = undefined } = {}) {
+  const route = getRouteData();
+  const hash = routeHashFor(route.view, route);
+  const currentHash = window.location.hash || '#inicio';
+  const inheritedParent = history.state?.ufcrowd ? history.state.parentHash : null;
+  const state = {
+    ufcrowd: true,
+    route,
+    parentHash: replace ? inheritedParent : (parentHash !== undefined ? parentHash : currentHash)
+  };
+  if (replace) history.replaceState(state, '', hash);
+  else history.pushState(state, '', hash);
+}
+
+function updateRouteHistory({ replace = true } = {}) {
+  if (!history.state?.ufcrowd) return;
+  commitRoute({ replace });
+}
+
+function parseHashRoute(hash = window.location.hash) {
+  const value = decodeURIComponent((hash || '').replace(/^#/, ''));
+  if (!value || value === 'inicio' || value === 'home') return { view: 'home' };
+  const [routeName, routeId] = value.split('/');
+  if (routeName === 'categoria') return { view: 'category', category: routeId || 'entidades' };
+  if (routeName === 'projeto') return { view: 'detail', projectId: routeId };
+  if (routeName === 'entidade') return { view: 'entity-profile', projectId: routeId };
+  if (routeName === 'cadastro') return { view: 'entity-register' };
+  return { view: 'home' };
+}
+
+function restoreRoute(route = {}) {
+  const view = route.view || 'home';
+  if (route.homePage) currentHomePage = route.homePage;
+  if (route.category) activeCategorySlug = route.category;
+  if (route.categoryPage) currentCategoryPage = route.categoryPage;
+  if (route.filters) {
+    document.querySelectorAll('.filter-type-checkbox').forEach((el) => { el.checked = route.filters.types?.includes(el.value) || false; });
+    document.querySelectorAll('.filter-goal-checkbox').forEach((el) => { el.checked = route.filters.goals?.includes(el.value) || false; });
+    document.getElementById('filterPeriodSelect').value = route.filters.period || 'all';
+  }
+  previousView = route.previousView || 'home';
+
+  if (view === 'category') {
+    const slug = route.category || activeCategorySlug;
+    if (CATEGORY_TITLES[slug]) openCategoryView(slug, { recordHistory: false, resetFilters: false, page: route.categoryPage || 1 });
+    else showHomeView(false, { recordHistory: false });
+  } else if (view === 'detail' || view === 'entity-profile') {
+    const project = PROJECTS_CATALOG.find((p) => p.id === route.projectId);
+    if (project) openProjectDetail(project.id, { recordHistory: false, previous: route.previousView || 'home' });
+    else showHomeView(false, { recordHistory: false });
+  } else if (view === 'entity-register') {
+    // Cadastro é uma área protegida pelo login simulado; não abre por link direto.
+    if (currentUser) openEntityRegister({ recordHistory: false });
+    else showHomeView(false, { recordHistory: false });
+  } else {
+    showHomeView(false, { recordHistory: false });
+  }
+}
+
+function initHistoryRouting() {
+  const initialRoute = parseHashRoute();
+  if (window.location.hash && initialRoute.view !== 'home') {
+    restoreRoute(initialRoute);
+    history.replaceState({ ufcrowd: true, route: getRouteData(), parentHash: null }, '', routeHashFor(currentView, getRouteData()));
+  } else {
+    showHomeView(false, { recordHistory: false });
+    history.replaceState({ ufcrowd: true, route: getRouteData(), parentHash: null }, '', '#inicio');
+  }
+
+  window.addEventListener('popstate', (event) => {
+    restoreRoute(event.state?.ufcrowd ? event.state.route : parseHashRoute());
+  });
+}
+
+function navigateBack() {
+  if (history.state?.ufcrowd && history.state.parentHash) {
+    history.back();
+    return;
+  }
+  if (previousView === 'category') openCategoryView(activeCategorySlug);
+  else showHomeView();
+}
+
+function showHomeView(focusHeading = true, { recordHistory = true } = {}) {
+  switchView('home', focusHeading);
+  if (recordHistory) commitRoute();
+}
+
+function openCategoryView(categorySlug, { recordHistory = true, resetFilters = true, page = 1 } = {}) {
   activeCategorySlug = categorySlug;
-  currentCategoryPage = 1;
+  currentCategoryPage = page;
+  if (resetFilters) {
+    document.querySelectorAll('.filter-type-checkbox, .filter-goal-checkbox').forEach((el) => { el.checked = false; });
+    document.getElementById('filterPeriodSelect').value = 'all';
+  }
   document.getElementById('categoryPageTitle').textContent = CATEGORY_TITLES[categorySlug] || 'Entidades';
-  updateCategoryPaginationUI();
   renderCategoryGrid();
   switchView('category', true);
+  if (recordHistory) commitRoute();
 }
 
 /* =========================================================
@@ -255,7 +447,9 @@ function renderCategoryGrid() {
   const countLabel = document.getElementById('categoryResultsCount');
   const { checkedTypes, checkedGoals, period } = getActiveFilters();
 
-  let items = PROJECTS_CATALOG.filter((item) => item.category === activeCategorySlug);
+  const categoryItems = PROJECTS_CATALOG.filter((item) => item.category === activeCategorySlug);
+  updateFilterCounts(categoryItems);
+  let items = [...categoryItems];
 
   if (checkedTypes.length > 0) {
     items = items.filter((item) => checkedTypes.includes(item.contentType));
@@ -270,16 +464,20 @@ function renderCategoryGrid() {
   }
 
   const itemsPerPage = 6;
+  const pageCount = Math.max(1, Math.ceil(items.length / itemsPerPage));
+  currentCategoryPage = Math.min(Math.max(1, currentCategoryPage), pageCount);
   const startIndex = (currentCategoryPage - 1) * itemsPerPage;
   const paginatedItems = items.slice(startIndex, startIndex + itemsPerPage);
 
   countLabel.textContent =
     items.length === 1 ? '1 resultado encontrado' : `${items.length} resultados encontrados`;
+  renderCategoryPagination(pageCount);
 
   if (paginatedItems.length === 0) {
     grid.innerHTML = `
       <div class="empty-filter-state">
-        <p>Nenhum item corresponde aos filtros selecionados nesta página.</p>
+        <p>Nenhum item corresponde aos filtros selecionados.</p>
+        <p>Experimente remover um filtro ou limpar todos.</p>
       </div>
     `;
     return;
@@ -304,36 +502,79 @@ function renderCategoryGrid() {
   });
 }
 
-function updateCategoryPaginationUI() {
-  document.querySelectorAll('.cat-page-btn').forEach((btn) => {
-    const pageNum = Number(btn.getAttribute('data-cat-page'));
-    const isActive = pageNum === currentCategoryPage;
-    btn.classList.toggle('active', isActive);
-    btn.setAttribute('aria-current', isActive ? 'page' : 'false');
+function updateFilterCounts(categoryItems) {
+  document.querySelectorAll('.filter-type-checkbox').forEach((checkbox) => {
+    const count = categoryItems.filter((item) => item.contentType === checkbox.value).length;
+    const pill = checkbox.closest('.filter-check-row')?.querySelector('.filter-count-pill');
+    if (pill) pill.textContent = String(count);
+    checkbox.disabled = count === 0;
+    if (count === 0) checkbox.checked = false;
+    checkbox.closest('.filter-check-row')?.classList.toggle('filter-option-unavailable', count === 0);
   });
+}
+
+function renderCategoryPagination(pageCount) {
+  const nav = document.querySelector('.category-pagination');
+  if (!nav) return;
+  const previous = document.getElementById('catPrevPageBtn');
+  const next = document.getElementById('catNextPageBtn');
+  previous.disabled = currentCategoryPage <= 1;
+  next.disabled = currentCategoryPage >= pageCount;
+  nav.querySelectorAll('.cat-page-btn').forEach((button) => button.remove());
+
+  const fragment = document.createDocumentFragment();
+  for (let page = 1; page <= pageCount; page += 1) {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = `page-btn cat-page-btn${page === currentCategoryPage ? ' active' : ''}`;
+    button.dataset.catPage = String(page);
+    button.textContent = String(page);
+    button.setAttribute('aria-label', `Página ${page}`);
+    if (page === currentCategoryPage) button.setAttribute('aria-current', 'page');
+    button.addEventListener('click', () => {
+      currentCategoryPage = page;
+      renderCategoryGrid();
+      updateRouteHistory({ replace: true });
+    });
+    fragment.appendChild(button);
+  }
+  next.before(fragment);
 }
 
 /* =========================================================
    ROTEADOR ENTRE PÁGINA COM FINANCIAMENTO vs. VITRINE INSTITUCIONAL
    ========================================================= */
-function openProjectDetail(projectId) {
-  if (currentView !== 'detail' && currentView !== 'entity-profile') {
-    previousView = currentView;
-  }
+function openProjectDetail(projectId, { recordHistory = true, previous = null } = {}) {
+  previousView = previous || currentView;
 
-  const project = PROJECTS_CATALOG.find((p) => p.id === projectId) || PROJECTS_CATALOG[0];
+  const project = PROJECTS_CATALOG.find((p) => p.id === projectId);
+  if (!project) {
+    showToast('Não encontramos essa iniciativa. Voltando à página inicial.');
+    showHomeView(false);
+    return;
+  }
   activeProject = project;
 
   if (project.requiresFunding === false) {
-    openEntityInstitutionalProfile(project);
+    openEntityInstitutionalProfile(project, { recordHistory });
     return;
   }
 
   activeCampaignTab = 'campanha';
+  document.querySelectorAll('.campaign-tab').forEach((tab) => {
+    const selected = tab.dataset.tab === 'campanha';
+    tab.classList.toggle('active', selected);
+    tab.setAttribute('aria-selected', String(selected));
+    tab.setAttribute('tabindex', selected ? '0' : '-1');
+  });
 
   const backBtn = document.getElementById('backFromDetailBtn');
   if (previousView === 'category') {
     backBtn.innerHTML = `&larr; Voltar para ${CATEGORY_TITLES[activeCategorySlug] || 'Entidades'}`;
+  } else if (previousView === 'detail') {
+    backBtn.innerHTML = '&larr; Voltar ao projeto anterior';
+  } else if (previousView === 'entity-profile') {
+    backBtn.innerHTML = '&larr; Voltar à página institucional';
   } else {
     backBtn.innerHTML = '&larr; Voltar à página inicial';
   }
@@ -348,9 +589,9 @@ function openProjectDetail(projectId) {
   document.getElementById('detailBadgeLabel').textContent = project.badgeLabel;
   updateFundingSidebarUI(project);
 
-  document.getElementById('faqCountBadge').textContent = project.faqsCount;
-  document.getElementById('updatesCountBadge').textContent = project.updatesCount;
-  document.getElementById('commentsCountBadge').textContent = project.commentsCount;
+  document.getElementById('faqCountBadge').textContent = '2';
+  document.getElementById('updatesCountBadge').textContent = '1';
+  document.getElementById('commentsCountBadge').textContent = '1';
 
   document.querySelectorAll('.campaign-tab').forEach((tab) => {
     const isCampaign = tab.getAttribute('data-tab') === 'campanha';
@@ -361,15 +602,19 @@ function openProjectDetail(projectId) {
   renderCampaignTabContent();
   renderSimilarProjects(project.id);
   switchView('detail', true);
+  updateProjectActionsUI(project);
+  if (recordHistory) commitRoute();
 }
 
 /* =========================================================
    VISÃO 3B: PÁGINA INSTITUCIONAL (SEM APOIO FINANCEIRO)
    ========================================================= */
-function openEntityInstitutionalProfile(entity) {
+function openEntityInstitutionalProfile(entity, { recordHistory = true } = {}) {
   const backBtn = document.getElementById('backFromProfileBtn');
   if (previousView === 'category') {
     backBtn.innerHTML = `&larr; Voltar para ${CATEGORY_TITLES[activeCategorySlug] || 'Entidades'}`;
+  } else if (previousView === 'detail') {
+    backBtn.innerHTML = '&larr; Voltar ao projeto anterior';
   } else {
     backBtn.innerHTML = '&larr; Voltar à página inicial';
   }
@@ -416,6 +661,8 @@ function openEntityInstitutionalProfile(entity) {
   });
 
   switchView('entity-profile', true);
+  updateProjectActionsUI(entity);
+  if (recordHistory) commitRoute();
 }
 
 function openHighlightModal(entity, highlight) {
@@ -434,19 +681,35 @@ function openHighlightModal(entity, highlight) {
    VISÃO 3A: FUNÇÕES DA PÁGINA COM FINANCIAMENTO
    ========================================================= */
 function updateFundingSidebarUI(project) {
-  const percentage = Math.min(Math.round((project.raised / project.goal) * 100), 100);
+  project.daysLeft = calculateDaysLeft(project);
+  const rawPercentage = project.goal > 0 ? Math.round((project.raised / project.goal) * 100) : 0;
+  const percentage = Math.min(Math.max(rawPercentage, 0), 100);
   document.getElementById('detailRaisedAmount').textContent = formatBRL(project.raised);
   document.getElementById('detailGoalText').textContent = `de uma meta de ${formatBRL(project.goal)}`;
   document.getElementById('detailProgressFill').style.width = `${percentage}%`;
   document.getElementById('detailProgressBar').setAttribute('aria-valuenow', String(percentage));
+  document.getElementById('detailProgressBar').setAttribute('aria-valuetext', `${percentage}% da meta${rawPercentage > 100 ? ' (meta ultrapassada)' : ''}`);
   document.getElementById('detailBackersCount').textContent = project.backers;
-  document.getElementById('detailDaysLeft').textContent = project.daysLeft;
-  document.getElementById('detailDeadlineText').innerHTML = `Este projeto será financiado até o dia <strong>${project.deadline}</strong>, às 23h59 (horário de Brasília).`;
+  document.getElementById('detailDaysLeft').textContent = Math.max(0, project.daysLeft);
+  document.getElementById('detailDaysLeft').setAttribute('aria-label', project.daysLeft <= 0 ? 'Campanha encerrada' : `${project.daysLeft} dias restantes`);
+  document.querySelector('#detailDaysLeft').closest('.metric-item').querySelector('.metric-label').textContent = project.daysLeft <= 0 ? 'campanha encerrada' : project.daysLeft === 1 ? 'dia restante' : 'dias restantes';
+  document.getElementById('fundingStatusTitle').textContent = project.raised >= project.goal ? 'Meta' : 'Meta em';
+  document.getElementById('fundingStatusLabel').textContent = project.raised >= project.goal ? 'atingida' : project.daysLeft <= 0 ? 'encerrada' : 'andamento';
+  const supportButton = document.getElementById('openSupportModalBtn');
+  supportButton.querySelector('span').textContent = project.daysLeft <= 0 ? 'Campanha encerrada' : project.raised >= project.goal ? 'Simular apoio adicional' : 'Simular apoio';
+  supportButton.disabled = project.daysLeft <= 0;
+  document.getElementById('barSupportBtn').disabled = project.daysLeft <= 0;
+  document.getElementById('remindMeBtn').disabled = project.daysLeft <= 0;
+  document.getElementById('detailProgressBar').setAttribute('aria-valuenow', String(percentage));
+  document.getElementById('detailDeadlineText').innerHTML = project.daysLeft <= 0
+    ? `Esta campanha foi encerrada em <strong>${project.deadline}</strong>.`
+    : `Este projeto será financiado até o dia <strong>${project.deadline}</strong>, às 23h59 (horário de Brasília).`;
 }
 
 function renderCampaignTabContent() {
   const panel = document.getElementById('campaignTabContent');
   const p = activeProject;
+  panel.setAttribute('aria-labelledby', `campaignTab-${activeCampaignTab}`);
 
   if (activeCampaignTab === 'campanha') {
     panel.innerHTML = `
@@ -462,6 +725,7 @@ function renderCampaignTabContent() {
   if (activeCampaignTab === 'recompensas') {
     panel.innerHTML = `
       <h2 class="story-heading">Recompensas e Contrapartidas Acadêmicas</h2>
+      <p class="prototype-note">Exemplos demonstrativos de contrapartidas. As recompensas reais dependeriam de cada campanha.</p>
       <div class="tab-cards-stack">
         <div class="info-box-card">
           <span class="info-box-meta">Apoio a partir de R$ 25</span>
@@ -487,9 +751,9 @@ function renderCampaignTabContent() {
     panel.innerHTML = `
       <h2 class="story-heading">Sobre a Equipe e Responsáveis</h2>
       <div class="info-box-card">
-        <span class="info-box-meta">Vinculação Institucional • UFABC</span>
+        <span class="info-box-meta">Perfil demonstrativo • UFABC</span>
         <h3>${p.author}</h3>
-        <p>Iniciativa cadastrada e validada na vitrine acadêmica UFCROWD. Os recursos e apoios recebidos são destinados integralmente à execução das atividades estudantis e laboratoriais.</p>
+        <p>Perfil de responsável apresentado no protótipo. A validação institucional e a gestão de recursos não estão implementadas.</p>
       </div>
     `;
     return;
@@ -497,7 +761,8 @@ function renderCampaignTabContent() {
 
   if (activeCampaignTab === 'faq') {
     panel.innerHTML = `
-      <h2 class="story-heading">Perguntas frequentes</h2>
+      <h2 class="story-heading">Perguntas frequentes — exemplos</h2>
+      <p class="prototype-note">Estas respostas são exemplos do protótipo e não foram fornecidas por cada criador de campanha.</p>
       <div class="tab-cards-stack">
         <div class="info-box-card">
           <h3>Como os recursos financeiros são utilizados?</h3>
@@ -514,7 +779,8 @@ function renderCampaignTabContent() {
 
   if (activeCampaignTab === 'atualizacoes') {
     panel.innerHTML = `
-      <h2 class="story-heading">Atualizações</h2>
+      <h2 class="story-heading">Atualizações — exemplo</h2>
+      <p class="prototype-note">Conteúdo demonstrativo. Não há publicação real de atualizações nesta versão.</p>
       <div class="tab-cards-stack">
         <div class="info-box-card">
           <span class="info-box-meta">Atualização #3 • Novembro de 2026</span>
@@ -528,7 +794,8 @@ function renderCampaignTabContent() {
 
   if (activeCampaignTab === 'comentarios') {
     panel.innerHTML = `
-      <h2 class="story-heading">Comentários da Comunidade (${p.commentsCount})</h2>
+      <h2 class="story-heading">Comentários — exemplo</h2>
+      <p class="prototype-note">Este comentário é demonstrativo; não existe sistema real de comentários.</p>
       <div class="tab-cards-stack">
         <div class="info-box-card">
           <span class="info-box-meta">Mariana Costa • Discente BC&T</span>
@@ -540,7 +807,8 @@ function renderCampaignTabContent() {
   }
 
   panel.innerHTML = `
-    <h2 class="story-heading">Comunidade de Apoiadores</h2>
+    <h2 class="story-heading">Comunidade de Apoiadores — demonstração</h2>
+    <p class="prototype-note">Os números de apoiadores são dados de exemplo do catálogo.</p>
     <div class="info-box-card">
       <span class="info-box-meta">${p.backers} pessoas apoiando esta iniciativa</span>
       <h3>Rede colaborativa UFABC e Sociedade</h3>
@@ -551,7 +819,11 @@ function renderCampaignTabContent() {
 
 function renderSimilarProjects(excludeId) {
   const grid = document.getElementById('similarProjectsGrid');
-  const similar = PROJECTS_CATALOG.filter((p) => p.id !== excludeId).slice(0, 3);
+  const source = PROJECTS_CATALOG.find((p) => p.id === excludeId);
+  const sameCategory = PROJECTS_CATALOG.filter((p) => p.id !== excludeId && p.category === source?.category);
+  const similar = sameCategory.length >= 3
+    ? sameCategory.slice(0, 3)
+    : [...sameCategory, ...PROJECTS_CATALOG.filter((p) => p.id !== excludeId && p.category !== source?.category)].slice(0, 3);
 
   grid.innerHTML = similar
     .map(
@@ -583,6 +855,67 @@ function showToast(message) {
   }, 3200);
 }
 
+function getCurrentShareUrl() {
+  return window.location.href;
+}
+
+async function copyText(text) {
+  try {
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(text);
+      return true;
+    }
+  } catch {
+    // Fallback para contextos sem Clipboard API.
+  }
+  const field = document.createElement('textarea');
+  field.value = text;
+  field.setAttribute('readonly', '');
+  field.style.position = 'fixed';
+  field.style.opacity = '0';
+  document.body.appendChild(field);
+  field.select();
+  let copied = false;
+  try { copied = document.execCommand('copy'); } catch { copied = false; }
+  field.remove();
+  return copied;
+}
+
+function shareProject(channel) {
+  const url = getCurrentShareUrl();
+  const text = `${activeProject?.title || 'Projeto UFCROWD'} — conheça no UFCROWD`;
+  const encodedUrl = encodeURIComponent(url);
+  const encodedText = encodeURIComponent(text);
+  const destinations = {
+    Facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
+    Twitter: `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedText}`,
+    X: `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedText}`,
+    WhatsApp: `https://wa.me/?text=${encodedText}%20${encodedUrl}`,
+    'E-mail': `mailto:?subject=${encodedText}&body=${encodedUrl}`
+  };
+  if (destinations[channel] && !url.startsWith('file:')) {
+    window.open(destinations[channel], '_blank', 'noopener,noreferrer');
+    return;
+  }
+  copyText(url).then((copied) => showToast(copied ? 'Link do projeto copiado.' : 'Não foi possível copiar. Selecione e copie o endereço do navegador.'));
+}
+
+function updateProjectActionsUI(project = activeProject) {
+  if (!project) return;
+  const saveButton = document.getElementById('saveProjectBtn');
+  if (saveButton) {
+    const isSaved = savedProjectIds.has(project.id);
+    saveButton.setAttribute('aria-pressed', String(isSaved));
+    document.getElementById('saveProjectLabel').textContent = isSaved ? 'Projeto salvo' : 'Salvar projeto';
+  }
+  const reminderButton = document.getElementById('remindMeBtn');
+  if (reminderButton) {
+    const isReminded = reminderProjectIds.has(project.id);
+    reminderButton.setAttribute('aria-pressed', String(isReminded));
+    reminderButton.querySelector('span').textContent = isReminded ? 'Lembrete salvo' : 'Lembrar-me';
+  }
+}
+
 /* =========================================================
    LOGIN E CADASTRO DA ENTIDADE
    ========================================================= */
@@ -609,13 +942,14 @@ function updateAuthUI() {
   chip.textContent = loggedIn ? `Olá, ${currentUser.name.split(' ')[0]}` : '';
 }
 
-function openEntityRegister() {
+function openEntityRegister({ recordHistory = true } = {}) {
   if (!currentUser) return;
   document.getElementById('registerOwner').textContent =
     `Cadastro feito por ${currentUser.name} (${currentUser.email}).`;
   const email = document.getElementById('entEmail');
   if (!email.value) email.value = currentUser.email;
   switchView('entity-register', true);
+  if (recordHistory) commitRoute();
 }
 
 function setFieldError(field, message) {
@@ -780,10 +1114,20 @@ function handleEntityRegisterSubmit(e) {
 
   const entity = buildEntityFromForm();
   PROJECTS_CATALOG.unshift(entity);
+  let storageSaved = false;
+  try {
+    const registered = JSON.parse(localStorage.getItem('ufcrowd:registered-entities') || '[]');
+    registered.unshift(entity);
+    storageSaved = (localStorage.setItem('ufcrowd:registered-entities', JSON.stringify(registered)), true);
+  } catch {
+    storageSaved = false;
+  }
   resetRegisterForm();
   openCategoryView(entity.category);
   openProjectDetail(entity.id);
-  showToast('Entidade cadastrada! Esta é a página que o público vai ver.');
+  showToast(storageSaved
+    ? 'Entidade cadastrada no protótipo e salva neste navegador.'
+    : 'Entidade cadastrada temporariamente nesta sessão.');
 }
 
 /* =========================================================
@@ -819,13 +1163,7 @@ function initNavigation() {
     });
   });
   // Botões voltar nas telas de detalhes (Financiamento e Institucional)
-  const handleBackNavigation = () => {
-    if (previousView === 'category') {
-      switchView('category', true);
-    } else {
-      showHomeView(true);
-    }
-  };
+  const handleBackNavigation = () => navigateBack();
 
   document.getElementById('backFromDetailBtn').addEventListener('click', handleBackNavigation);
   document.getElementById('backFromProfileBtn').addEventListener('click', handleBackNavigation);
@@ -840,19 +1178,30 @@ function initNavigation() {
 
 /* Página de categoria: filtros laterais e paginação */
 function initCategoryPage() {
+  const filterToggle = document.getElementById('filtersToggleBtn');
+  const filterBody = document.getElementById('filterPanelBody');
+  if (filterToggle && filterBody) {
+    filterToggle.addEventListener('click', () => {
+      const expanded = filterToggle.getAttribute('aria-expanded') !== 'true';
+      filterToggle.setAttribute('aria-expanded', String(expanded));
+      filterBody.classList.toggle('filters-expanded', expanded);
+      filterToggle.querySelector('span:first-child').textContent = expanded ? 'Ocultar filtros' : 'Mostrar filtros';
+    });
+  }
+
   // Eventos dos filtros laterais da página de categoria
   document.querySelectorAll('.filter-type-checkbox, .filter-goal-checkbox').forEach((cb) => {
     cb.addEventListener('change', () => {
       currentCategoryPage = 1;
-      updateCategoryPaginationUI();
       renderCategoryGrid();
+      updateRouteHistory({ replace: true });
     });
   });
 
   document.getElementById('filterPeriodSelect').addEventListener('change', () => {
     currentCategoryPage = 1;
-    updateCategoryPaginationUI();
     renderCategoryGrid();
+    updateRouteHistory({ replace: true });
   });
 
   document.getElementById('clearFiltersBtn').addEventListener('click', () => {
@@ -861,29 +1210,22 @@ function initCategoryPage() {
     });
     document.getElementById('filterPeriodSelect').value = 'all';
     currentCategoryPage = 1;
-    updateCategoryPaginationUI();
     renderCategoryGrid();
+    updateRouteHistory({ replace: true });
     showToast('Filtros limpos.');
   });
-  // Paginação da página de categoria
-  document.querySelectorAll('.cat-page-btn').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      currentCategoryPage = Number(btn.getAttribute('data-cat-page'));
-      updateCategoryPaginationUI();
-      renderCategoryGrid();
-    });
-  });
-
   document.getElementById('catPrevPageBtn').addEventListener('click', () => {
-    currentCategoryPage = currentCategoryPage > 1 ? currentCategoryPage - 1 : 3;
-    updateCategoryPaginationUI();
+    currentCategoryPage = Math.max(1, currentCategoryPage - 1);
     renderCategoryGrid();
+    updateRouteHistory({ replace: true });
   });
 
   document.getElementById('catNextPageBtn').addEventListener('click', () => {
-    currentCategoryPage = currentCategoryPage < 3 ? currentCategoryPage + 1 : 1;
-    updateCategoryPaginationUI();
+    const categoryCount = PROJECTS_CATALOG.filter((item) => item.category === activeCategorySlug).length;
+    const pageCount = Math.max(1, Math.ceil(categoryCount / 6));
+    currentCategoryPage = Math.min(pageCount, currentCategoryPage + 1);
     renderCategoryGrid();
+    updateRouteHistory({ replace: true });
   });
 }
 
@@ -895,6 +1237,7 @@ function initHomePage() {
       currentHomePage = Number(btn.getAttribute('data-page'));
       updateHomePaginationUI();
       renderRecommendedProjects();
+      updateRouteHistory({ replace: true });
     });
   });
 
@@ -902,16 +1245,18 @@ function initHomePage() {
     currentHomePage = currentHomePage > 1 ? currentHomePage - 1 : 3;
     updateHomePaginationUI();
     renderRecommendedProjects();
+    updateRouteHistory({ replace: true });
   });
 
   document.getElementById('nextPageBtn').addEventListener('click', () => {
     currentHomePage = currentHomePage < 3 ? currentHomePage + 1 : 1;
     updateHomePaginationUI();
     renderRecommendedProjects();
+    updateRouteHistory({ replace: true });
   });
-  // Banner FAPESP (mouse + teclado)
-  bindCardKeyboardActivation(document.getElementById('newsBanner'), () => {
-    showToast('Edital FAPESP 1º semestre 2027: consulte prazos na Pró-Reitoria de Pós-Graduação.');
+  // O banner é um link externo real; mantém a ativação nativa por teclado.
+  document.getElementById('newsBanner').addEventListener('click', () => {
+    showToast('Abrindo a página oficial da FAPESP em outra aba.');
   });
 }
 
@@ -923,9 +1268,11 @@ function initProjectTabs() {
       document.querySelectorAll('.campaign-tab').forEach((t) => {
         t.classList.remove('active');
         t.setAttribute('aria-selected', 'false');
+        t.setAttribute('tabindex', '-1');
       });
       tab.classList.add('active');
       tab.setAttribute('aria-selected', 'true');
+      tab.setAttribute('tabindex', '0');
       activeCampaignTab = tab.getAttribute('data-tab');
       renderCampaignTabContent();
     });
@@ -936,21 +1283,31 @@ function initProjectTabs() {
 function initProjectActions() {
   // Salvar projeto / Lembrar-me / Compartilhar (ambas as telas)
   document.getElementById('saveProjectBtn').addEventListener('click', (e) => {
-    const btn = e.currentTarget;
-    const isSaved = btn.getAttribute('aria-pressed') === 'true';
-    btn.setAttribute('aria-pressed', String(!isSaved));
-    document.getElementById('saveProjectLabel').textContent = !isSaved ? 'Projeto salvo' : 'Salvar projeto';
-    showToast(!isSaved ? 'Projeto adicionado aos seus salvos!' : 'Projeto removido dos salvos.');
+    const isSaved = savedProjectIds.has(activeProject.id);
+    if (isSaved) savedProjectIds.delete(activeProject.id);
+    else savedProjectIds.add(activeProject.id);
+    const persisted = writeLocalStorageSet('ufcrowd:saved-projects', savedProjectIds);
+    updateProjectActionsUI(activeProject);
+    showToast(persisted
+      ? (isSaved ? 'Projeto removido dos salvos neste navegador.' : 'Projeto salvo neste navegador.')
+      : 'Estado atualizado apenas nesta sessão.');
   });
 
   document.getElementById('remindMeBtn').addEventListener('click', () => {
-    showToast('Lembrete ativado! Você será notificado antes do encerramento da campanha.');
+    const isReminded = reminderProjectIds.has(activeProject.id);
+    if (isReminded) reminderProjectIds.delete(activeProject.id);
+    else reminderProjectIds.add(activeProject.id);
+    const persisted = writeLocalStorageSet('ufcrowd:reminders', reminderProjectIds);
+    updateProjectActionsUI(activeProject);
+    showToast(persisted
+      ? (isReminded ? 'Lembrete removido deste navegador.' : 'Preferência de lembrete salva neste navegador. Não há notificações automáticas nesta versão.')
+      : 'Preferência de lembrete atualizada apenas nesta sessão.');
   });
 
   document.querySelectorAll('.mini-share-btn, .profile-share-circle').forEach((btn) => {
     btn.addEventListener('click', () => {
       const channel = btn.getAttribute('data-share');
-      showToast(`Link de compartilhamento (${channel}) copiado!`);
+      shareProject(channel);
     });
   });
 }
@@ -964,12 +1321,13 @@ function initModals() {
 
   document.getElementById('openSupportModalBtn').addEventListener('click', () => {
     document.getElementById('supportModalProjectName').innerHTML = activeProject.title;
+    document.getElementById('customSupportAmount').value = '25';
+    document.querySelectorAll('.tier-btn').forEach((button, index) => button.classList.toggle('active', index === 0));
     openAccessibleModal(supportModal);
   });
 
   document.getElementById('barSupportBtn').addEventListener('click', () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    document.getElementById('openSupportModalBtn').focus();
+    document.getElementById('openSupportModalBtn').click();
   });
 
   document.getElementById('closeSupportModal').addEventListener('click', () => {
@@ -990,7 +1348,7 @@ function initModals() {
 
   document.getElementById('highlightModalActionBtn').addEventListener('click', () => {
     closeAccessibleModal(highlightModal);
-    showToast('Redirecionando para o canal oficial da entidade na UFABC.');
+    showToast('Este destaque não possui link externo cadastrado no protótipo.');
   });
 
   document.querySelectorAll('.tier-btn').forEach((tierBtn) => {
@@ -1001,15 +1359,24 @@ function initModals() {
     });
   });
 
+  document.getElementById('customSupportAmount').addEventListener('input', () => {
+    document.querySelectorAll('.tier-btn').forEach((button) => {
+      button.classList.toggle('active', button.getAttribute('data-amount') === document.getElementById('customSupportAmount').value);
+    });
+  });
+
   document.getElementById('supportContributionForm').addEventListener('submit', (e) => {
     e.preventDefault();
     const amount = Number(document.getElementById('customSupportAmount').value) || 0;
-    if (amount > 0) {
+    if (amount >= 5 && amount % 5 === 0) {
       activeProject.raised += amount;
       activeProject.backers += 1;
       updateFundingSidebarUI(activeProject);
       closeAccessibleModal(supportModal);
-      showToast(`Obrigado! Apoio de ${formatBRL(amount)} registrado no protótipo.`);
+      showToast(`Apoio simulado de ${formatBRL(amount)} registrado nesta sessão.`);
+    } else {
+      document.getElementById('customSupportAmount').focus();
+      showToast('Informe um valor mínimo de R$ 5, em múltiplos de R$ 5.');
     }
   });
   // Login modal
@@ -1028,13 +1395,19 @@ function initModals() {
   document.getElementById('loginForm').addEventListener('submit', (e) => {
     e.preventDefault();
     const email = document.getElementById('ufabcEmail').value.trim();
+    const domain = email.split('@')[1]?.toLowerCase() || '';
+    if (domain !== 'ufabc.edu.br' && domain !== 'aluno.ufabc.edu.br') {
+      showToast('Use um e-mail institucional da UFABC.');
+      document.getElementById('ufabcEmail').focus();
+      return;
+    }
     currentUser = { email, name: nameFromEmail(email) };
     e.currentTarget.reset();
     updateAuthUI();
     closeAccessibleModal(loginModal);
-    showToast('Login institucional simulado com sucesso!');
-    openEntityRegister(); // após o login, segue direto para o cadastro da entidade
+    showToast('Acesso demonstrativo ativado. A autenticação não é real.');
   });
+  document.getElementById('ufabcEmail').addEventListener('input', (e) => e.currentTarget.setCustomValidity(''));
   // Gerenciamento global de teclado para Modais (ESC e Focus Trap)
   document.addEventListener('keydown', (e) => {
     const activeModal = !supportModal.hidden
@@ -1082,8 +1455,33 @@ function initNewsletter() {
     e.preventDefault();
     const input = document.getElementById('newsletterEmail');
     const feedback = document.getElementById('newsletterFeedback');
-    feedback.textContent = `E-mail ${input.value} cadastrado com sucesso!`;
+    feedback.textContent = 'Demonstração: o e-mail não foi enviado nem armazenado.';
     input.value = '';
+  });
+}
+
+function initFooterNavigation() {
+  document.querySelectorAll('[data-footer-home]').forEach((button) => {
+    button.addEventListener('click', () => showHomeView(true));
+  });
+  document.querySelectorAll('[data-footer-category]').forEach((button) => {
+    button.addEventListener('click', () => openCategoryView(button.dataset.footerCategory));
+  });
+  ['footerA11yBtn', 'footerA11yLegalBtn'].forEach((id) => {
+    const button = document.getElementById(id);
+    if (!button) return;
+    button.addEventListener('click', (event) => {
+      event.stopPropagation();
+      const popover = document.getElementById('a11yPopover');
+      const openButton = document.getElementById('openA11yMenuBtn');
+      if (popover.hidden) openButton.click();
+      else document.getElementById('closeA11yMenuBtn').click();
+    });
+  });
+  document.querySelectorAll('.share-site-btn').forEach((button) => {
+    button.addEventListener('click', () => {
+      copyText(getCurrentShareUrl()).then((copied) => showToast(copied ? 'Link do UFCROWD copiado.' : 'Não foi possível copiar o link.'));
+    });
   });
 }
 
@@ -1092,8 +1490,8 @@ function initEntityRegister() {
   // Cadastro da entidade (disponível após o login)
   const registerForm = document.getElementById('entityRegisterForm');
   document.getElementById('registerEntityBtn').addEventListener('click', openEntityRegister);
-  document.getElementById('backFromRegisterBtn').addEventListener('click', () => showHomeView(true));
-  document.getElementById('cancelRegisterBtn').addEventListener('click', () => showHomeView(true));
+  document.getElementById('backFromRegisterBtn').addEventListener('click', navigateBack);
+  document.getElementById('cancelRegisterBtn').addEventListener('click', navigateBack);
   registerForm.addEventListener('submit', handleEntityRegisterSubmit);
   registerForm.addEventListener('input', (e) => {
     if (e.target.getAttribute('aria-invalid') === 'true') validateField(e.target);
@@ -1112,12 +1510,14 @@ function initEntityRegister() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  initLocalPrototypeState();
+  initImageFallbacks();
   renderFeaturedProject();
   renderRecommendedProjects();
   initAccessibilityMenu();
 
   enableHorizontalArrowNavigation('#primaryCategoryNav', '.cat-link');
-  enableHorizontalArrowNavigation('#campaignTabsList', '.campaign-tab');
+  enableHorizontalArrowNavigation('#campaignTabsList', '.campaign-tab', true);
 
   initNavigation();
   initCategoryPage();
@@ -1126,5 +1526,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initProjectActions();
   initModals();
   initNewsletter();
+  initFooterNavigation();
   initEntityRegister();
+  initHistoryRouting();
 });

@@ -17,9 +17,9 @@ const A11Y_CLASS_TOGGLES = {
 
 // Recursos de vídeo (protótipo): só alternam o estado e avisam o usuário [ligado, desligado]
 const A11Y_TOAST_TOGGLES = {
-  captions: ['Legendas automáticas (CC) habilitadas.', 'Legendas desativadas.'],
-  libras: ['Intérprete virtual VLibras ativado.', 'VLibras ocultado.'],
-  'audio-desc': ['Audiodescrição de imagens habilitada.', 'Audiodescrição desativada.']
+  captions: ['Legendas: recurso demonstrativo; integração ainda não disponível.', 'Legendas: demonstração desativada.'],
+  libras: ['VLibras: integração ainda não disponível nesta versão.', 'VLibras: demonstração desativada.'],
+  'audio-desc': ['Audiodescrição: recurso demonstrativo; integração ainda não disponível.', 'Audiodescrição: demonstração desativada.']
 };
 
 /* =========================================================
@@ -62,13 +62,13 @@ function initAccessibilityMenu() {
     badge.hidden = activeCount === 0;
   }
 
-  function togglePopover(forceOpen) {
+  function togglePopover(forceOpen, restoreFocus = true) {
     const willOpen = typeof forceOpen === 'boolean' ? forceOpen : popover.hidden;
     popover.hidden = !willOpen;
     openBtn.setAttribute('aria-expanded', String(willOpen));
     if (willOpen) {
       closeBtn.focus();
-    } else {
+    } else if (restoreFocus) {
       openBtn.focus();
     }
   }
@@ -82,7 +82,7 @@ function initAccessibilityMenu() {
 
   document.addEventListener('click', (e) => {
     if (!popover.hidden && !popover.contains(e.target) && !openBtn.contains(e.target)) {
-      togglePopover(false);
+      togglePopover(false, false);
     }
   });
 
@@ -92,10 +92,12 @@ function initAccessibilityMenu() {
     }
   });
 
-  // Leitura assistida ao focar elementos quando "Leitor de tela" está ativo
+  // Leitura por voz experimental ao focar elementos; não substitui leitores de tela nativos.
   document.addEventListener('focusin', (e) => {
     if (!state.screenReader) return;
-    const label = e.target.getAttribute('aria-label') || e.target.innerText;
+    if (popover.contains(e.target)) return;
+    if (e.target.closest('.a11y-tile')) return;
+    const label = e.target.getAttribute('aria-label') || e.target.innerText || e.target.textContent;
     if (label && label.trim().length > 1) {
       speakText(label.trim().slice(0, 140));
     }
@@ -237,7 +239,8 @@ function initAccessibilityMenu() {
           case 'screen-reader':
             state.screenReader = nextPressed;
             setPressed(nextPressed);
-            if (nextPressed) speakText('Leitor de tela ativado.');
+            if (nextPressed && 'speechSynthesis' in window) speakText('Leitura por voz experimental ativada. Ela não substitui um leitor de tela nativo.');
+            else if (nextPressed) showToast('Leitura por voz não é suportada neste navegador.');
             else if ('speechSynthesis' in window) window.speechSynthesis.cancel();
             break;
           case 'speech-rate':
@@ -253,9 +256,20 @@ function initAccessibilityMenu() {
           case 'read-page':
             setPressed(nextPressed);
             if (nextPressed) {
-              const visibleMain = document.querySelector('main:not([hidden]), section:not([hidden])');
-              speakText(visibleMain ? visibleMain.innerText.slice(0, 900) : document.title);
-              showToast('Lendo conteúdo da página em voz alta...');
+              const visibleContent = {
+                home: document.getElementById('homeView'),
+                category: document.getElementById('categoryView'),
+                detail: document.getElementById('projectDetailView'),
+                'entity-profile': document.getElementById('entityProfileView'),
+                'entity-register': document.getElementById('entityRegisterView')
+              }[currentView];
+              if ('speechSynthesis' in window) {
+                speakText(visibleContent ? visibleContent.innerText.slice(0, 1200) : document.title);
+                showToast('Lendo conteúdo da página em voz alta...');
+              } else {
+                setPressed(false);
+                showToast('Leitura por voz não é suportada neste navegador.');
+              }
             } else if ('speechSynthesis' in window) {
               window.speechSynthesis.cancel();
             }

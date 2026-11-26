@@ -17,6 +17,7 @@
   <link rel="stylesheet" href="css/07-accessibility-panel.css" />
   <link rel="stylesheet" href="css/08-entity-register.css" />
   <link rel="stylesheet" href="css/09-accessibility-extras.css" />
+  <link rel="stylesheet" href="css/10-responsive.css" />
 </head>
 <body>
   <!-- FILTROS SVG DE DALTONISMO (usados pela opção "Filtro de cor" do painel de acessibilidade) -->
@@ -128,7 +129,7 @@
                 </button>
                 <button type="button" class="a11y-tile" data-a11y="auto-brightness" aria-pressed="false">
                   <span class="tile-icon" aria-hidden="true">&#9788;</span>
-                  <span class="tile-label">Brilho auto</span>
+                <span class="tile-label">Reduzir brilho</span>
                 </button>
                 <button type="button" class="a11y-tile" data-a11y="pause-animations" aria-pressed="false">
                   <span class="tile-icon" aria-hidden="true">&#9199;</span>
@@ -136,7 +137,7 @@
                 </button>
                 <button type="button" class="a11y-tile" data-a11y="screen-orientation" aria-pressed="false">
                   <span class="tile-icon" aria-hidden="true">&#9635;</span>
-                  <span class="tile-label">Orientação</span>
+                <span class="tile-label">Largura de leitura</span>
                 </button>
               </div>
               <div class="a11y-color-editor" id="screenColorEditor" hidden>
@@ -188,7 +189,7 @@
               <div class="a11y-tiles-grid">
                 <button type="button" class="a11y-tile" data-a11y="screen-reader" aria-pressed="false">
                   <span class="tile-icon" aria-hidden="true">&#128266;</span>
-                  <span class="tile-label">Leitor de tela</span>
+                <span class="tile-label">Leitura por voz</span>
                 </button>
                 <button type="button" class="a11y-tile" data-a11y="speech-rate" aria-pressed="false">
                   <span class="tile-icon" aria-hidden="true">&#9201;</span>
@@ -203,13 +204,14 @@
                   <span class="tile-label">Ler página</span>
                 </button>
               </div>
+              <p class="a11y-group-note">A leitura por voz é experimental e não substitui um leitor de tela do sistema.</p>
             </section>
 
             <!-- 4. VÍDEO -->
             <section class="a11y-group" aria-labelledby="a11yGroupVideo">
               <div class="a11y-group-head">
-                <h3 id="a11yGroupVideo">Vídeo</h3>
-                <span>Recursos para conteúdos audiovisuais.</span>
+                <h3 id="a11yGroupVideo">Recursos demonstrativos</h3>
+                <span>Integrações ainda não disponíveis nesta versão.</span>
               </div>
               <div class="a11y-tiles-grid a11y-tiles-3">
                 <button type="button" class="a11y-tile" data-a11y="captions" aria-pressed="false">
@@ -253,34 +255,21 @@
           <button type="button" class="cat-link" data-category="extensao">Projetos de Extensão</button>
         </nav>
 
-        <div class="header-socials" aria-label="Redes sociais">
-          <a href="#instagram" aria-label="Instagram" class="social-icon-link">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-              <rect x="2" y="2" width="20" height="20" rx="5"></rect>
-              <circle cx="12" cy="12" r="4.5"></circle>
-              <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"></circle>
+        <div class="header-socials" aria-label="Compartilhar UFCROWD">
+          <button type="button" class="social-icon-link share-site-btn" data-share-site="copy" aria-label="Copiar link do UFCROWD">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+              <circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle>
+              <path d="M8.6 10.7l6.8-4.2M8.6 13.3l6.8 4.2"></path>
             </svg>
-          </a>
-          <a href="#linkedin" aria-label="LinkedIn" class="social-icon-link">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-              <rect x="2" y="2" width="20" height="20" rx="3"></rect>
-              <line x1="7" y1="10" x2="7" y2="17"></line>
-              <circle cx="7" cy="7" r="1" fill="currentColor" stroke="none"></circle>
-              <path d="M11 17v-4a2.5 2.5 0 0 1 5 0v4"></path>
-            </svg>
-          </a>
-          <a href="#x" aria-label="X" class="social-icon-link">
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-            </svg>
-          </a>
+          </button>
         </div>
       </div>
     </div>
   </header>
 
   <!-- VISÃO 1: PÁGINA INICIAL (VITRINE) -->
-  <main id="homeView" class="container main-content">
+  <main id="homeView" class="container main-content" tabindex="-1">
+    <span id="mainSkipTarget" class="skip-target" tabindex="-1" aria-hidden="true"></span>
     <section class="news-section" aria-labelledby="newsHeading">
       <h1 id="newsHeading" class="section-main-title" tabindex="-1">Principais notícias UFABC</h1>
 
@@ -326,7 +315,7 @@
   </main>
 
   <!-- VISÃO 2: PÁGINA DE CATEGORIA (ENTIDADES, PESQUISAS, ATLÉTICAS, EXTENSÃO) -->
-  <section id="categoryView" class="container category-view" hidden aria-labelledby="categoryPageTitle">
+  <section id="categoryView" class="container category-view" hidden aria-labelledby="categoryPageTitle" tabindex="-1">
     <div class="category-layout-grid">
       <!-- Barra lateral de filtros -->
       <aside class="filters-sidebar-card" aria-label="Filtros da categoria">
@@ -337,12 +326,19 @@
           <h2>Filtros</h2>
         </div>
 
+        <button type="button" class="filters-mobile-toggle" id="filtersToggleBtn" aria-expanded="false" aria-controls="filterPanelBody">
+          <span>Mostrar filtros</span>
+          <span aria-hidden="true">⌄</span>
+        </button>
+
+        <div class="filters-panel-body" id="filterPanelBody">
+
         <div class="filter-group">
           <h3 class="filter-group-title">Tipo de conteúdo</h3>
 
           <label class="filter-check-row">
             <span class="filter-check-left">
-              <input type="checkbox" class="filter-type-checkbox" value="processos" checked />
+              <input type="checkbox" class="filter-type-checkbox" value="processos" />
               <span class="custom-checkbox" aria-hidden="true"></span>
               <span>Processos seletivos</span>
             </span>
@@ -351,7 +347,7 @@
 
           <label class="filter-check-row">
             <span class="filter-check-left">
-              <input type="checkbox" class="filter-type-checkbox" value="premiacoes" checked />
+              <input type="checkbox" class="filter-type-checkbox" value="premiacoes" />
               <span class="custom-checkbox" aria-hidden="true"></span>
               <span>Premiações</span>
             </span>
@@ -369,7 +365,7 @@
 
           <label class="filter-check-row">
             <span class="filter-check-left">
-              <input type="checkbox" class="filter-type-checkbox" value="eventos" checked />
+              <input type="checkbox" class="filter-type-checkbox" value="eventos" />
               <span class="custom-checkbox" aria-hidden="true"></span>
               <span>Eventos</span>
             </span>
@@ -467,6 +463,7 @@
           </svg>
           <span>Limpar filtros</span>
         </button>
+        </div>
       </aside>
 
       <!-- Coluna direita: Título da categoria + Grade 2x3 + Paginação -->
@@ -480,9 +477,6 @@
 
         <nav class="pagination category-pagination" aria-label="Paginação da categoria">
           <button type="button" class="page-btn" id="catPrevPageBtn" aria-label="Página anterior">&lsaquo;</button>
-          <button type="button" class="page-btn cat-page-btn active" data-cat-page="1" aria-label="Página 1" aria-current="page">1</button>
-          <button type="button" class="page-btn cat-page-btn" data-cat-page="2" aria-label="Página 2">2</button>
-          <button type="button" class="page-btn cat-page-btn" data-cat-page="3" aria-label="Página 3">3</button>
           <button type="button" class="page-btn" id="catNextPageBtn" aria-label="Próxima página">&rsaquo;</button>
         </nav>
       </div>
@@ -544,17 +538,18 @@
                 <span class="metric-label">dias restantes</span>
               </div>
               <div class="metric-item">
-                <span class="metric-status-title">Meta em</span>
-                <span class="metric-label">andamento</span>
+                <span class="metric-status-title" id="fundingStatusTitle">Meta em</span>
+                <span class="metric-label" id="fundingStatusLabel">andamento</span>
               </div>
             </div>
           </div>
+          <p class="funding-demo-note">Valores, metas e apoiadores são dados demonstrativos do protótipo.</p>
 
           <button type="button" class="cta-support-btn" id="openSupportModalBtn">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true">
               <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
             </svg>
-            <span>Apoie este projeto</span>
+            <span>Simular apoio</span>
           </button>
 
           <div class="funding-secondary-actions">
@@ -583,7 +578,7 @@
                   <polyline points="22,6 12,13 2,6"></polyline>
                 </svg>
               </button>
-              <button type="button" class="mini-share-btn" data-share="Link incorporado" aria-label="Copiar código de incorporação">&lt;/&gt;</button>
+              <button type="button" class="mini-share-btn" data-share="Link incorporado" aria-label="Copiar link do projeto">&lt;/&gt;</button>
             </div>
           </div>
 
@@ -604,23 +599,23 @@
     <div class="campaign-tabs-bar">
       <div class="container campaign-tabs-inner">
         <div class="campaign-tabs-list" id="campaignTabsList" role="tablist" aria-label="Seções do projeto">
-          <button type="button" role="tab" aria-selected="true" class="campaign-tab active" data-tab="campanha">Campanha</button>
-          <button type="button" role="tab" aria-selected="false" class="campaign-tab" data-tab="recompensas">Recompensas</button>
-          <button type="button" role="tab" aria-selected="false" class="campaign-tab" data-tab="criador">Criador</button>
-          <button type="button" role="tab" aria-selected="false" class="campaign-tab" data-tab="faq">
+          <button type="button" role="tab" id="campaignTab-campanha" aria-controls="campaignTabContent" tabindex="0" aria-selected="true" class="campaign-tab active" data-tab="campanha">Campanha</button>
+          <button type="button" role="tab" id="campaignTab-recompensas" aria-controls="campaignTabContent" tabindex="-1" aria-selected="false" class="campaign-tab" data-tab="recompensas">Recompensas</button>
+          <button type="button" role="tab" id="campaignTab-criador" aria-controls="campaignTabContent" tabindex="-1" aria-selected="false" class="campaign-tab" data-tab="criador">Criador</button>
+          <button type="button" role="tab" id="campaignTab-faq" aria-controls="campaignTabContent" tabindex="-1" aria-selected="false" class="campaign-tab" data-tab="faq">
             Perguntas frequentes <sup id="faqCountBadge">2</sup>
           </button>
-          <button type="button" role="tab" aria-selected="false" class="campaign-tab" data-tab="atualizacoes">
+          <button type="button" role="tab" id="campaignTab-atualizacoes" aria-controls="campaignTabContent" tabindex="-1" aria-selected="false" class="campaign-tab" data-tab="atualizacoes">
             Atualizações <sup id="updatesCountBadge">3</sup>
           </button>
-          <button type="button" role="tab" aria-selected="false" class="campaign-tab" data-tab="comentarios">
+          <button type="button" role="tab" id="campaignTab-comentarios" aria-controls="campaignTabContent" tabindex="-1" aria-selected="false" class="campaign-tab" data-tab="comentarios">
             Comentários <sup id="commentsCountBadge">48</sup>
           </button>
-          <button type="button" role="tab" aria-selected="false" class="campaign-tab" data-tab="comunidade">Comunidade</button>
+          <button type="button" role="tab" id="campaignTab-comunidade" aria-controls="campaignTabContent" tabindex="-1" aria-selected="false" class="campaign-tab" data-tab="comunidade">Comunidade</button>
         </div>
 
         <div class="campaign-bar-actions">
-          <button type="button" class="bar-primary-btn" id="barSupportBtn">Voltar para este projeto</button>
+          <button type="button" class="bar-primary-btn" id="barSupportBtn">Simular apoio</button>
           <button type="button" class="bar-remind-btn" id="remindMeBtn">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
               <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
@@ -632,7 +627,7 @@
     </div>
 
     <div class="container campaign-body-container">
-      <div id="campaignTabContent" class="campaign-tab-panel" role="tabpanel"></div>
+      <div id="campaignTabContent" class="campaign-tab-panel" role="tabpanel" aria-labelledby="campaignTab-campanha" tabindex="0"></div>
 
       <section class="similar-projects-section" aria-labelledby="similarHeading">
         <h2 id="similarHeading" class="similar-heading">Veja projetos similares</h2>
@@ -680,7 +675,7 @@
                 <polyline points="22,6 12,13 2,6"></polyline>
               </svg>
             </button>
-            <button type="button" class="profile-share-circle" data-share="Código de incorporação" aria-label="Copiar código de incorporação">&lt;/&gt;</button>
+            <button type="button" class="profile-share-circle" data-share="Código de incorporação" aria-label="Copiar link do projeto">&lt;/&gt;</button>
           </div>
         </div>
       </div>
@@ -836,31 +831,12 @@
         </form>
 
         <div class="footer-socials">
-          <a href="#instagram" aria-label="Instagram UFCROWD" class="footer-social-circle">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <rect x="2" y="2" width="20" height="20" rx="5"></rect>
-              <circle cx="12" cy="12" r="4"></circle>
-              <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"></circle>
+          <button type="button" class="footer-social-circle share-site-btn" data-share-site="copy" aria-label="Copiar link do UFCROWD">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle>
+              <path d="M8.6 10.7l6.8-4.2M8.6 13.3l6.8 4.2"></path>
             </svg>
-          </a>
-          <a href="#youtube" aria-label="YouTube UFCROWD" class="footer-social-circle">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2 31.4 31.4 0 0 0 0 12a31.4 31.4 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1A31.4 31.4 0 0 0 24 12a31.4 31.4 0 0 0-.5-5.8zM9.6 15.6V8.4l6.3 3.6-6.3 3.6z" />
-            </svg>
-          </a>
-          <a href="#linkedin" aria-label="LinkedIn UFCROWD" class="footer-social-circle">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <rect x="2" y="2" width="20" height="20" rx="3"></rect>
-              <line x1="7" y1="10" x2="7" y2="17"></line>
-              <circle cx="7" cy="7" r="1" fill="currentColor" stroke="none"></circle>
-              <path d="M11 17v-4a2.5 2.5 0 0 1 5 0v4"></path>
-            </svg>
-          </a>
-          <a href="#x" aria-label="X UFCROWD" class="footer-social-circle">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-            </svg>
-          </a>
+          </button>
         </div>
       </div>
 
@@ -868,44 +844,45 @@
         <div class="footer-col">
           <h3>Explorar</h3>
           <ul>
-            <li><a href="#inicio" class="footer-home-trigger">Projetos</a></li>
-            <li><a href="#">Editais e Chamadas</a></li>
-            <li><a href="#">Perguntas Frequentes</a></li>
-            <li><a href="#">Sobre o UFCROWD</a></li>
-            <li><a href="#">Contato</a></li>
+            <li><button type="button" class="footer-nav-btn" data-footer-home>Projetos</button></li>
+            <li><button type="button" class="footer-nav-btn" data-footer-category="entidades">Entidades</button></li>
+            <li><button type="button" class="footer-nav-btn" data-footer-category="pesquisas">Pesquisas</button></li>
+            <li><button type="button" class="footer-nav-btn" data-footer-category="atleticas">Atléticas</button></li>
+            <li><button type="button" class="footer-nav-btn" data-footer-category="extensao">Extensão</button></li>
+            <li><a href="https://fapesp.br/bolsas" target="_blank" rel="noopener noreferrer">Editais e chamadas</a></li>
           </ul>
         </div>
 
         <div class="footer-col">
           <h3>Institucional</h3>
           <ul>
-            <li><a href="#">UFABC</a></li>
-            <li><a href="#">Graduação</a></li>
-            <li><a href="#">Pós-Graduação</a></li>
-            <li><a href="#">Pesquisa</a></li>
-            <li><a href="#">Extensão</a></li>
+            <li><a href="https://www.ufabc.edu.br/" target="_blank" rel="noopener noreferrer">UFABC</a></li>
+            <li><span class="footer-coming-soon">Graduação <small>Em breve</small></span></li>
+            <li><span class="footer-coming-soon">Pós-Graduação <small>Em breve</small></span></li>
+            <li><span class="footer-coming-soon">Pesquisa <small>Em breve</small></span></li>
+            <li><span class="footer-coming-soon">Extensão <small>Em breve</small></span></li>
           </ul>
         </div>
 
         <div class="footer-col">
           <h3>Suporte</h3>
           <ul>
-            <li><a href="#">Central de Ajuda</a></li>
-            <li><a href="#">Fale Conosco</a></li>
-            <li><a href="#">Políticas de Uso</a></li>
-            <li><a href="#">Termos de Serviço</a></li>
-            <li><a href="#">Acessibilidade</a></li>
+            <li><span class="footer-coming-soon">Central de ajuda <small>Em breve</small></span></li>
+            <li><span class="footer-coming-soon">Contato <small>Em breve</small></span></li>
+            <li><span class="footer-coming-soon">Políticas de uso <small>Em breve</small></span></li>
+            <li><span class="footer-coming-soon">Termos de serviço <small>Em breve</small></span></li>
+            <li><button type="button" class="footer-nav-btn" id="footerA11yBtn">Acessibilidade</button></li>
           </ul>
         </div>
 
         <div class="footer-col">
           <h3>Mais</h3>
           <ul>
-            <li><a href="#">Novidades</a></li>
-            <li><a href="#">Blog</a></li>
-            <li><a href="#">Projetos em Destaque</a></li>
-            <li><a href="#">Aplicativo Mobile</a></li>
-            <li><a href="#">Pesquisa</a></li>
+            <li><button type="button" class="footer-nav-btn" data-footer-home>Projetos em destaque</button></li>
+            <li><span class="footer-coming-soon">Novidades <small>Em breve</small></span></li>
+            <li><span class="footer-coming-soon">Blog <small>Em breve</small></span></li>
+            <li><span class="footer-coming-soon">Aplicativo mobile <small>Em breve</small></span></li>
+            <li><span class="footer-coming-soon">Pesquisa <small>Em breve</small></span></li>
           </ul>
         </div>
       </div>
@@ -916,13 +893,13 @@
         <div class="legal-links">
           <span>&copy; 2026 UFCROWD. Todos os direitos reservados.</span>
           <span class="sep">|</span>
-          <a href="#">Termos de Uso</a>
+          <span class="footer-coming-soon">Termos de Uso <small>Em breve</small></span>
           <span class="sep">|</span>
-          <a href="#">Política de Privacidade</a>
+          <span class="footer-coming-soon">Política de Privacidade <small>Em breve</small></span>
           <span class="sep">|</span>
-          <a href="#">Política de Cookies</a>
+          <span class="footer-coming-soon">Política de Cookies <small>Em breve</small></span>
           <span class="sep">|</span>
-          <a href="#">Acessibilidade</a>
+          <button type="button" class="footer-nav-btn" id="footerA11yLegalBtn">Acessibilidade</button>
         </div>
         <div class="legal-uni">Universidade Federal do ABC</div>
       </div>
@@ -939,6 +916,7 @@
         <p class="modal-sub" id="supportModalProjectName"></p>
 
         <form id="supportContributionForm" class="support-form">
+          <p class="prototype-note">Demonstração: nenhum pagamento é realizado. O valor arrecadado e o número de apoiadores são atualizados apenas nesta sessão.</p>
           <label class="support-label">Escolha uma cota de apoio (R$):</label>
           <div class="tier-options">
             <button type="button" class="tier-btn active" data-amount="25">
@@ -958,7 +936,7 @@
           <label for="customSupportAmount" class="support-label">Ou informe outro valor (R$):</label>
           <input type="number" id="customSupportAmount" min="5" step="5" value="25" required />
 
-          <button type="submit" class="btn-primary full-width">Confirmar Apoio ao Projeto</button>
+          <button type="submit" class="btn-primary full-width">Registrar apoio simulado</button>
         </form>
       </div>
     </div>
@@ -974,7 +952,7 @@
         <h3 id="highlightModalTitle"></h3>
         <p class="modal-sub" id="highlightModalBody"></p>
         <button type="button" class="btn-primary full-width" id="highlightModalActionBtn">
-          Participar / Saber mais
+          Saber mais (demo)
         </button>
       </div>
     </div>
@@ -986,11 +964,11 @@
       <button type="button" class="modal-close" id="closeLoginModal" aria-label="Fechar janela de login">&times;</button>
       <div class="modal-body">
         <h3 id="loginModalTitle">Acesso Institucional UFABC</h3>
-        <p class="modal-sub">Entre com seu e-mail institucional para cadastrar ou apoiar projetos.</p>
+        <p class="modal-sub">Acesso demonstrativo. Não há autenticação real nesta versão; use um e-mail @ufabc.edu.br ou @aluno.ufabc.edu.br.</p>
         <form id="loginForm" class="login-form">
           <label for="ufabcEmail">E-mail institucional</label>
           <input type="email" id="ufabcEmail" placeholder="nome.sobrenome@aluno.ufabc.edu.br" required />
-          <label for="ufabcPass">Senha</label>
+          <label for="ufabcPass">Senha (demonstrativa)</label>
           <input type="password" id="ufabcPass" placeholder="••••••••" required />
           <button type="submit" class="btn-primary full-width">Entrar no UFCROWD</button>
         </form>
