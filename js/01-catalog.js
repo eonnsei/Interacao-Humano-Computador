@@ -292,7 +292,7 @@ const PROJECTS_CATALOG = [
     backers: 158,
     daysLeft: 12,
     deadline: '04 de dezembro de 2026',
-    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRxnH6q8L4kzgYtQLqcyV1hXe0zQfu_xxCRVnhTIMSCQA&s=10',
+    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQVtqp4-hrIhwTfxb4QNWZWxBOozR7vncKE3_8C1TZgQPG0h7VkDZ1-ukA&s=10',
     secondaryImage: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRxnH6q8L4kzgYtQLqcyV1hXe0zQfu_xxCRVnhTIMSCQA&s=10',
     shortDesc:
       'Equipe oficial de robótica competitiva da UFABC, premiada em torneios nacionais e ' +
