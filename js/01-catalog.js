@@ -334,7 +334,7 @@ const PROJECTS_CATALOG = [
     daysLeft: 5,
     deadline: '28 de novembro de 2026',
     image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJpDsE2MsP22YqPI2xb0LFycmn6U7sc6giu6iR2FPC8Q&s=10',
-    secondaryImage: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSbmNTTgFQQMekJO1sxGi68L4ZHKoCpLRoLxcLJK99FNQ&s=10',
+    secondaryImage: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJpDsE2MsP22YqPI2xb0LFycmn6U7sc6giu6iR2FPC8Q&s=10',
     shortDesc:
       'Equipe de competição estudantil da UFABC dedicada ao projeto, manufatura e testes de ' +
         'protótipos automotivos de alta eficiência.',
