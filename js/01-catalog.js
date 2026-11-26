@@ -986,7 +986,7 @@ const PROJECTS_CATALOG = [
     backers: 136,
     daysLeft: 9,
     deadline: '01 de dezembro de 2026',
-    image: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=900&q=80',
+    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGYuPiQKRHx5aRCAHzv1Jx822i5QOKmqhxAFN0S125Rg&s=10',
     secondaryImage: 'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&w=900&q=80',
     shortDesc:
       'Aulas gratuitas, simulados e mentoria acadêmica ministrados por discentes da UFABC para ' +
