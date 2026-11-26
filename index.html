@@ -30,9 +30,10 @@
   </svg>
 
   <!-- LINK DE ACESSIBILIDADE PARA PULAR NAVEGAÇÃO -->
-  <a href="#mainSkipTarget" class="skip-link" id="skipToContentLink">
+  <a href="#homeView" class="skip-link" id="skipToContentLink">
     Pular para o conteúdo principal
   </a>
+  <div id="routeAnnouncement" class="visually-hidden" role="status" aria-live="polite" aria-atomic="true"></div>
 
   <!-- CABEÇALHO -->
   <header class="site-header">
@@ -85,7 +86,7 @@
               </span>
               <div>
                 <h2 id="a11yPopoverTitle">Acessibilidade</h2>
-                <p>Personalize sua experiência de navegação.</p>
+                <p>Navegação, leitura e ajustes de apresentação.</p>
               </div>
             </div>
 
@@ -137,7 +138,7 @@
                 </button>
                 <button type="button" class="a11y-tile" data-a11y="screen-orientation" aria-pressed="false">
                   <span class="tile-icon" aria-hidden="true">&#9635;</span>
-                <span class="tile-label">Largura de leitura</span>
+                <span class="tile-label">Largura do conteúdo</span>
                 </button>
               </div>
               <div class="a11y-color-editor" id="screenColorEditor" hidden>
@@ -180,58 +181,43 @@
               </div>
             </section>
 
-            <!-- 3. SOM -->
-            <section class="a11y-group" aria-labelledby="a11yGroupSound">
+            <!-- 3. LEITURA ASSISTIDA: ferramenta complementar, não substitui leitores nativos -->
+            <section class="a11y-group a11y-reading-group" aria-labelledby="a11yGroupReading">
               <div class="a11y-group-head">
-                <h3 id="a11yGroupSound">Som</h3>
-                <span>Recursos de leitura assistida.</span>
+                <h3 id="a11yGroupReading">Leitura assistida</h3>
+                <span>Você controla quando o conteúdo é lido.</span>
               </div>
-              <div class="a11y-tiles-grid">
-                <button type="button" class="a11y-tile" data-a11y="screen-reader" aria-pressed="false">
-                  <span class="tile-icon" aria-hidden="true">&#128266;</span>
-                <span class="tile-label">Leitura por voz</span>
-                </button>
-                <button type="button" class="a11y-tile" data-a11y="speech-rate" aria-pressed="false">
-                  <span class="tile-icon" aria-hidden="true">&#9201;</span>
-                  <span class="tile-label" id="tileRateLabel">Velocidade 1x</span>
-                </button>
-                <button type="button" class="a11y-tile" data-a11y="speech-pitch" aria-pressed="false">
-                  <span class="tile-icon" aria-hidden="true">&#127925;</span>
-                  <span class="tile-label" id="tilePitchLabel">Timbre</span>
-                </button>
-                <button type="button" class="a11y-tile" data-a11y="read-page" aria-pressed="false">
-                  <span class="tile-icon" aria-hidden="true">&#128214;</span>
-                  <span class="tile-label">Ler página</span>
-                </button>
+              <div class="a11y-reading-controls" role="group" aria-label="Controles de leitura em voz alta">
+                <button type="button" class="a11y-reading-btn a11y-reading-primary" id="readSelectionBtn" disabled>Ouvir seleção</button>
+                <button type="button" class="a11y-reading-btn" id="readPageBtn">Ouvir página</button>
+                <button type="button" class="a11y-reading-btn" id="pauseSpeechBtn" disabled>Pausar</button>
+                <button type="button" class="a11y-reading-btn" id="stopSpeechBtn" disabled>Parar</button>
+                <label class="a11y-speed-control" for="speechRateSelect">Velocidade
+                  <select id="speechRateSelect">
+                    <option value="0.75">0,75×</option>
+                    <option value="1" selected>1×</option>
+                    <option value="1.25">1,25×</option>
+                    <option value="1.5">1,5×</option>
+                    <option value="2">2×</option>
+                  </select>
+                </label>
               </div>
-              <p class="a11y-group-note">A leitura por voz é experimental e não substitui um leitor de tela do sistema.</p>
+              <p class="a11y-group-note" id="speechStatus" role="status" aria-live="polite">Selecione um texto ou ouça o conteúdo principal. Esta ferramenta complementar não substitui VoiceOver, TalkBack ou NVDA.</p>
             </section>
 
-            <!-- 4. VÍDEO -->
-            <section class="a11y-group" aria-labelledby="a11yGroupVideo">
+            <!-- 4. INFORMAÇÃO SOBRE TECNOLOGIAS ASSISTIVAS -->
+            <section class="a11y-group" aria-labelledby="a11yGroupAssistive">
               <div class="a11y-group-head">
-                <h3 id="a11yGroupVideo">Recursos demonstrativos</h3>
-                <span>Integrações ainda não disponíveis nesta versão.</span>
+                <h3 id="a11yGroupAssistive">Tecnologias assistivas</h3>
+                <span>Compatibilidade com ferramentas do sistema.</span>
               </div>
-              <div class="a11y-tiles-grid a11y-tiles-3">
-                <button type="button" class="a11y-tile" data-a11y="captions" aria-pressed="false">
-                  <span class="tile-icon" aria-hidden="true">CC</span>
-                  <span class="tile-label">Legendas</span>
-                </button>
-                <button type="button" class="a11y-tile" data-a11y="libras" aria-pressed="false">
-                  <span class="tile-icon" aria-hidden="true">&#9995;</span>
-                  <span class="tile-label">Libras</span>
-                </button>
-                <button type="button" class="a11y-tile" data-a11y="audio-desc" aria-pressed="false">
-                  <span class="tile-icon" aria-hidden="true">&#127911;</span>
-                  <span class="tile-label">Audiodescrição</span>
-                </button>
-              </div>
+              <p class="a11y-group-note">O UFCROWD busca funcionar com leitores de tela, como VoiceOver, TalkBack e NVDA. Use também os recursos de acessibilidade do seu dispositivo.</p>
+              <a class="a11y-help-link" href="https://www.gov.br/governodigital/pt-br/acessibilidade-e-usuario/vlibras/vlibras" target="_blank" rel="noopener noreferrer">Sobre o VLibras (abre em nova aba)</a>
             </section>
           </div>
 
           <div class="a11y-pop-footer">
-            <span>As configurações são aplicadas automaticamente e podem ser revertidas a qualquer momento.</span>
+            <span>Os ajustes são complementares. Use também os recursos assistivos do seu dispositivo.</span>
           </div>
         </div>
       </div>
@@ -269,7 +255,7 @@
 
   <!-- VISÃO 1: PÁGINA INICIAL (VITRINE) -->
   <main id="homeView" class="container main-content" tabindex="-1">
-    <span id="mainSkipTarget" class="skip-target" tabindex="-1" aria-hidden="true"></span>
+    
     <section class="news-section" aria-labelledby="newsHeading">
       <h1 id="newsHeading" class="section-main-title" tabindex="-1">Principais notícias UFABC</h1>
 
@@ -978,6 +964,13 @@
 
   <!-- TOAST DE FEEDBACK -->
   <div class="toast" id="toastNotification" role="status" aria-live="polite"></div>
+
+  <!-- Widget oficial VLibras: carregado externamente; requer conexão com a internet -->
+  <div vw class="enabled" id="vlibrasWidget" aria-label="Widget de tradução automática para Libras">
+    <div vw-access-button class="active" aria-label="Abrir tradutor VLibras"></div>
+    <div vw-plugin-wrapper><div class="vw-plugin-top-wrapper"></div></div>
+  </div>
+  <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
 
   <!-- Scripts: catálogo (dados) → aplicação → painel de acessibilidade -->
   <script src="js/01-catalog.js"></script>

@@ -73,3 +73,7 @@ Os botões voltar/avançar do navegador restauram a navegação interna.
 3. Backend, autenticação, banco de dados e moderação.
 4. Fluxo real de criação de campanhas e apoio, com segurança e transparência.
 5. Integrações oficiais para notícias, editais e oportunidades.
+
+## Acessibilidade atualizada
+
+O painel oferece ajustes de visual e texto, leitura assistida controlada pelo usuário, e integração com o widget oficial VLibras. A leitura assistida não substitui leitores de tela nativos. O widget VLibras requer conexão com a internet. Consulte `QA_REPORT.md` para limitações e validações realizadas.

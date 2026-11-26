@@ -334,7 +334,7 @@ const PROJECTS_CATALOG = [
     daysLeft: 5,
     deadline: '28 de novembro de 2026',
     image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJpDsE2MsP22YqPI2xb0LFycmn6U7sc6giu6iR2FPC8Q&s=10',
-    secondaryImage: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJpDsE2MsP22YqPI2xb0LFycmn6U7sc6giu6iR2FPC8Q&s=10',
+    secondaryImage: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSbmNTTgFQQMekJO1sxGi68L4ZHKoCpLRoLxcLJK99FNQ&s=10',
     shortDesc:
       'Equipe de competição estudantil da UFABC dedicada ao projeto, manufatura e testes de ' +
         'protótipos automotivos de alta eficiência.',
@@ -662,8 +662,8 @@ const PROJECTS_CATALOG = [
     title: 'Usando algoritmos genéticos em redes neurais',
     subtitle: 'Otimização evolutiva de arquiteturas profundas aplicada à análise de imagens.',
     meta: 'Vitrine Científica • Iniciação Científica',
-    image: 'https://blog.nvidia.com.br/wp-content/uploads/sites/12/2022/10/GNN-hero-image-x1280.jpg',
-    heroBannerImage: 'https://blog.nvidia.com.br/wp-content/uploads/sites/12/2022/10/GNN-hero-image-x1280.jpg',
+    image: 'https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?auto=format&fit=crop&w=900&q=80',
+    heroBannerImage: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1400&q=80',
     emblemSvg: ENTITY_EMBLEMS.researchDefault,
     bioParagraphs: [
       'Projeto de Iniciação Científica desenvolvido no Centro de Matemática, Computação e ' +
@@ -724,8 +724,8 @@ const PROJECTS_CATALOG = [
     backers: 88,
     daysLeft: 18,
     deadline: '11 de dezembro de 2026',
-    image: 'https://www.drawellanalytical.com/wp-content/uploads/2025/04/Types-of-Nanomaterials.jpg',
-    secondaryImage: 'https://www.drawellanalytical.com/wp-content/uploads/2025/04/Types-of-Nanomaterials.jpg',
+    image: 'https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=900&q=80',
+    secondaryImage: 'https://images.unsplash.com/photo-1579154204601-01588f351e67?auto=format&fit=crop&w=900&q=80',
     shortDesc:
       'Pesquisa aplicada em química e engenharia de materiais para remoção catalítica de ' +
         'poluentes orgânicos.',
@@ -759,8 +759,8 @@ const PROJECTS_CATALOG = [
     title: 'Interfaces cérebro-computador não invasivas para reabilitação motora',
     subtitle: 'Processamento de sinais EEG para tecnologias assistivas de baixo custo.',
     meta: 'Vitrine Científica • Neurociência e Computação',
-    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_AOheEpIJQoOOLRb3rX6JIz2dbNQgwY9uPNIeq618g70_FL7vkUT8GluC&s=10',
-    heroBannerImage: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_AOheEpIJQoOOLRb3rX6JIz2dbNQgwY9uPNIeq618g70_FL7vkUT8GluC&s=10',
+    image: 'https://images.unsplash.com/photo-1559757175-5700dde675bc?auto=format&fit=crop&w=900&q=80',
+    heroBannerImage: 'https://images.unsplash.com/photo-1559757175-5700dde675bc?auto=format&fit=crop&w=1400&q=80',
     emblemSvg: ENTITY_EMBLEMS.researchDefault,
     bioParagraphs: [
       'Linha de pesquisa interdisciplinar que une Neurociência, Engenharia Biomédica e Ciência ' +
@@ -986,8 +986,8 @@ const PROJECTS_CATALOG = [
     backers: 136,
     daysLeft: 9,
     deadline: '01 de dezembro de 2026',
-    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGYuPiQKRHx5aRCAHzv1Jx822i5QOKmqhxAFN0S125Rg&s=10',
-    secondaryImage: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGYuPiQKRHx5aRCAHzv1Jx822i5QOKmqhxAFN0S125Rg&s=10',
+    image: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=900&q=80',
+    secondaryImage: 'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&w=900&q=80',
     shortDesc:
       'Aulas gratuitas, simulados e mentoria acadêmica ministrados por discentes da UFABC para ' +
         'estudantes da rede pública.',

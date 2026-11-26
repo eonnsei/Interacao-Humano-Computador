@@ -206,10 +206,22 @@ function switchView(targetView, focusHeading = true) {
   document.getElementById('entityProfileView').hidden = targetView !== 'entity-profile';
   document.getElementById('entityRegisterView').hidden = targetView !== 'entity-register';
 
+  // Mantém um landmark principal por vez e anuncia a mudança para tecnologias assistivas.
+  const viewIds = ['homeView', 'categoryView', 'projectDetailView', 'entityProfileView', 'entityRegisterView'];
+  viewIds.forEach((id) => {
+    const view = document.getElementById(id);
+    if (view && !view.hidden) view.setAttribute('role', 'main');
+    else if (view) view.removeAttribute('role');
+  });
+  const routeNames = { home: 'Página inicial', category: 'Categoria', detail: 'Detalhes do projeto', 'entity-profile': 'Perfil de entidade', 'entity-register': 'Cadastro de entidade' };
+  const routeStatus = document.getElementById('routeAnnouncement');
+  if (routeStatus) routeStatus.textContent = `${routeNames[targetView] || 'Conteúdo'} carregado.`;
+
   document.querySelectorAll('.cat-link').forEach((btn) => {
     const isCurrentCat = targetView === 'category' && btn.getAttribute('data-category') === activeCategorySlug;
     btn.classList.toggle('active', isCurrentCat);
-    btn.setAttribute('aria-current', isCurrentCat ? 'page' : 'false');
+    if (isCurrentCat) btn.setAttribute('aria-current', 'page');
+    else btn.removeAttribute('aria-current');
   });
 
   window.scrollTo({ top: 0, behavior: 'smooth' });

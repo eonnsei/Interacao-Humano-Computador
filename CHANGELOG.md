@@ -36,3 +36,15 @@
 - Preservadas as melhorias de navegação, responsividade, filtros, paginação e acessibilidade da versão revisada.
 - Incorporadas as quatro alterações de imagens presentes no último commit enviado pelo usuário (commit `Foto tamandutech`).
 - Mantidas as demais alterações funcionais da versão revisada, sem substituir arquivos de lógica ou estilos pela versão anterior.
+
+## Revisão de acessibilidade (novembro/2026)
+
+- Removida a leitura automática ao receber foco; ela competia com VoiceOver, TalkBack e NVDA.
+- Implementados controles explícitos de leitura por voz: ouvir seleção, ouvir conteúdo da tela atual, pausar/continuar, parar e velocidade de 0,75× a 2×.
+- Renomeada a ferramenta para **Leitura assistida**, deixando explícito que não substitui leitor de tela nativo.
+- Integrado o widget oficial VLibras com o botão flutuante azul (dependente de conexão com internet).
+- Reorganizada a descrição do painel para priorizar navegação, leitura e ajustes.
+- Adicionados foco visível consistente, skip link funcional para a view atual, anúncios de mudança de tela para leitores de tela e persistência local de preferências.
+- Reformulado o painel no mobile como painel alto, com rolagem interna, controles maiores e adaptação a safe areas.
+- Removidos botões demonstrativos de legendas e audiodescrição sem conteúdo audiovisual real.
+- Melhorias no foco do botão VLibras e respeito a `prefers-reduced-motion`.

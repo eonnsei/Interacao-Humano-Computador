@@ -82,3 +82,26 @@
 - Painel de acessibilidade: alternância e restauração dos estados testados sem erros de JavaScript.
 - Ampliação de texto em 150% e 200%: overflow horizontal corrigido e medido em 320, 390, 768 e 1280 px.
 - Persistência local: rotinas de salvar projeto, preferência de lembrete e carregar entidades registradas foram verificadas com armazenamento local simulado no ambiente de teste.
+
+## Revisão de acessibilidade (novembro/2026)
+
+### Implementações realizadas
+- **Leitura assistida:** seleção de texto e conteúdo principal da tela visível; controles para iniciar, pausar/continuar, parar e ajustar velocidade (0,75×, 1×, 1,25×, 1,5× e 2×) usando Web Speech API.
+- A leitura não inicia automaticamente em eventos de foco, evitando conflito com VoiceOver, TalkBack e NVDA.
+- **VLibras:** integrado o widget oficial e o botão flutuante de acesso. Requer internet para baixar o script e os recursos do serviço.
+- **Semântica:** anúncio de mudanças de view por `aria-live`; view visível recebe landmark `main`; link de salto direciona para o conteúdo atual; `aria-current` é aplicado somente à categoria atual.
+- **Foco:** estilo `focus-visible` consistente e de alto destaque; link de salto visível quando focado.
+- **Mobile:** painel de acessibilidade passa a ocupar uma área alta com rolagem própria, safe-area, controles maiores e layout de leitura responsivo.
+- Preferências visuais simples são guardadas localmente e podem ser restauradas.
+- Recursos demonstrativos de legendas/audiodescrição foram removidos enquanto não há conteúdo audiovisual que os utilize.
+
+### Validação executada
+- `node --check` passou para os três arquivos JavaScript.
+- HTML foi processado por parser; IDs duplicados: 0; referências ARIA para IDs inexistentes: 0.
+- Auditoria estática encontrou 0 botões sem nome acessível, 0 campos sem label e 0 imagens sem `alt` no HTML inicial.
+- **Limitação:** não foi possível executar navegador de teste neste ambiente (acesso a `localhost` e `file://` bloqueado pelo ambiente). Portanto, o widget VLibras externo e os fluxos visuais/voz devem ser validados ao abrir o ZIP em navegador com internet. Também é necessário teste manual com leitores de tela e usuários.
+
+### Observações de uso
+- Leitura assistida depende de suporte do navegador à Web Speech API e das vozes disponíveis no sistema.
+- VLibras é tradução automática e não substitui intérprete humano.
+- O site ainda requer testes reais de acessibilidade/usabilidade e não deve ser declarado conforme WCAG sem auditoria.
